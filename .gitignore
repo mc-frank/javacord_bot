@@ -1,3 +1,12 @@
+# Manual stuff
+
+.idea/
+target/
+bot-log.txt
+pass.txt
+swearwords.txt
+
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
