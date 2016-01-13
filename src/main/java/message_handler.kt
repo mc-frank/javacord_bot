@@ -107,12 +107,14 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             _functions.forEach { message.reply(it) }
         }
 
+        // Not currently working - need to find way to stop the API
         else if(msg.contains("#stop")){
             if(user.equals("MCFrank")) {
                 // Stop the bot
             }
         }
 
+        // Reply with to a function in the file with the corresponding action
         loop@ for(i in 0..filefunc.max_size-1) {
             if(_functions[i].length < 1){
                 break@loop
@@ -124,7 +126,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
         }
 
-        println("message = $msg")
     }
 
     override fun onMessageEdit(api: DiscordAPI, message: Message, string: String) {

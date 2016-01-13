@@ -16,7 +16,7 @@ fun main(args: Array<String>) {
     try {
         creds = File("pass.txt").readLines()
     } catch (ex: Exception) {
-        //
+        // File not found or something.
     }
 
     api.email = creds[0]
@@ -24,20 +24,22 @@ fun main(args: Array<String>) {
 
     api.connect(object : ReadyListener {
         override fun onReady() {
-            println("Connected fam")
+            println("Connected to server with name: ${api.yourself.name}")
         }
 
         override fun onFail() {
-            println("Connection failed fam")
+            println("Connection failed to server")
         }
     })
 
-    api.game = "ALLAHU FRANKBAR"
+    api.game = "SPYING ON YOU >:)"
 
     var filefunctions: fileFunctions = fileFunctions()
     filefunctions.getFunctions()
 
     api.registerListener(mainListener())
 
+    println("Commands ready: ")
+    // Gonna make some command line arguments available to be used with the bot
 }
 
