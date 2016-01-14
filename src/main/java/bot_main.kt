@@ -1,8 +1,13 @@
+import de.btobastian.javacord.Channel
+import de.btobastian.javacord.Server
 import de.btobastian.javacord.impl.Javacord
 import de.btobastian.javacord.listener.ReadyListener
 import java.io.File
 import kotlin.collections.forEach
 import kotlin.collections.listOf
+import kotlin.text.contains
+import kotlin.text.split
+import kotlin.text.startsWith
 
 /**
  * Created by unwin on 10/01/2016.
@@ -39,7 +44,19 @@ fun main(args: Array<String>) {
 
     api.registerListener(mainListener())
 
-    println("Commands ready: ")
-    // Gonna make some command line arguments available to be used with the bot
+    // Do console based commands
+    while(true) {
+        println("Commands ready: ")
+        // Gonna make some command line arguments available to be used with the bot
+        var input = readLine()
+        if(input!!.startsWith("#msg", true)) {
+            var generalChannel: Channel = api.getServerById("90542226181988352").channels.get(0)
+            var msg = input.split("#msg ")
+            generalChannel.sendMessage("${msg[1]}")
+        }
+        else if(input.startsWith("~", true)) {
+
+        }
+    }
 }
 
