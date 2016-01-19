@@ -11,12 +11,12 @@ import de.btobastian.javacord.listener.server.ServerMemberRemoveListener
 import de.btobastian.javacord.listener.user.UserChangeNameListener
 import de.btobastian.javacord.listener.voice.VoiceChannelChangeNameListener
 import de.btobastian.javacord.message.Message
+import java.io.File
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
 import kotlin.collections.forEach
-import kotlin.text.contains
-import kotlin.text.substring
-import kotlin.text.trim
+import kotlin.collections.toTypedArray
+import kotlin.text.*
 
 /**
  * Created by unwin on 10/01/2016.
@@ -92,25 +92,63 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             message.reply("All of this bot is now in Kotlin ya dumb-dumb :)")
         }
 
-        else if(msg.contains("#get-funcs")){
+        else if(msg.contains("#get-funcs")) {
             //filefunc.getFunctions()
 
             var funcSize: Int = 0
-            for(i in 0..filefunc.max_size-1) {
+            for (i in 0..filefunc.max_size - 1) {
                 println("functions length = ${_functions[i].length}")
-                if(_functions[i].length < 1 && _actions[i].length < 1) {
-                    funcSize = i-1
+                if (_functions[i].length < 1 && _actions[i].length < 1) {
+                    funcSize = i - 1
                     break;
                 }
             }
             message.reply("There are $funcSize functions in the file currently:")
             _functions.forEach { message.reply(it) }
         }
+        else if(msg.contains("#status")) {
+            var word: String = msg.substring(8, msg.length)
+            word.trim()
+            api.game = word
+        }
+        else if(msg.contains("#avatar")) {
+            var word: String = msg.substring(8, msg.length)
+            var filename: String = "pics/avatar-$word.jpg"
+            var reply: String = ""
+
+            var avatar: ByteArray = ByteArray(0)
+            var file: File = File(filename)
+
+            var users: Array<User> = api.users.toTypedArray()
+
+            loop@ for(i in 0..users.size-1) {
+                var usr = users[i]
+                if(word.contains(usr.name)) {
+                    if(File(filename).exists()) {
+                        //
+                    }
+                    else {
+                        avatar = usr.avatarAsBytearray
+                        file.appendBytes(avatar)
+                    }
+                    reply = "$word's avatar:"
+                }
+            }
+
+            if(reply.length == 0) {
+                message.reply("User not found")
+            }
+            else {
+                message.reply(reply)
+                message.channelReceiver.sendFile(file)
+            }
+        }
 
         // Not currently working - need to find way to stop the API
         else if(msg.contains("#stop")){
             if(user.equals("MCFrank")) {
                 // Stop the bot
+                System.exit(-1)
             }
         }
 
@@ -137,11 +175,19 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
     }
 
     override fun onMessageDelete(api: DiscordAPI, message: Message) {
+        var msg: String = message.content
+        var user: String = message.author.name
+        var channel: String? = message.channelReceiver.name
 
+        var log: log = log()
+        log.setNewFileName(log._FILENAME)
+        log.setNewFileText( ("[$channel] $user deleted message: $msg") )
+        log.writeFile()
     }
 
     override fun onUserChangeName(api: DiscordAPI, user: User, oldName: String) {
-
+        var log: log = log()
+        log.setNewFileName(log._FILENAME)
     }
 
     override fun onServerMemberAdd(api: DiscordAPI, server: Server, user: User) {
