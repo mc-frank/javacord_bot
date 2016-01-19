@@ -1,11 +1,8 @@
 import de.btobastian.javacord.Channel
-import de.btobastian.javacord.Server
 import de.btobastian.javacord.impl.Javacord
 import de.btobastian.javacord.listener.ReadyListener
 import java.io.File
-import kotlin.collections.forEach
 import kotlin.collections.listOf
-import kotlin.text.contains
 import kotlin.text.split
 import kotlin.text.startsWith
 
