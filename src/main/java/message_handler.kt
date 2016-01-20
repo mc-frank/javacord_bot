@@ -112,7 +112,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             api.game = word
         }
         else if(msg.contains("#avatar")) {
-            var word: String = msg.substring(8, msg.length)
+            var word: String = msg.substring(8, msg.length).toLowerCase()
             var filename: String = "pics/avatar-$word.jpg"
             var reply: String = ""
 
@@ -123,7 +123,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
             loop@ for(i in 0..users.size-1) {
                 var usr = users[i]
-                if(word.contains(usr.name)) {
+                if(word.contains(usr.name.toLowerCase())) {
                     if(File(filename).exists()) {
                         //
                     }
@@ -143,8 +143,13 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 message.channelReceiver.sendFile(file)
             }
         }
+        else if(msg.contains("#paste")) {
+            var paste: String? = msg.substring(7, msg.length)
 
-        // Not currently working - need to find way to stop the API
+            // dis bit a secret ;)
+            message.reply(pasteText(paste))
+        }
+
         else if(msg.contains("#stop")){
             if(user.equals("MCFrank")) {
                 // Stop the bot

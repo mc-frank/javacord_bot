@@ -47,7 +47,9 @@ fun main(args: Array<String>) {
         // Gonna make some command line arguments available to be used with the bot
         var input = readLine()
         if(input!!.startsWith("#msg", true)) {
-            var generalChannel: Channel = api.getServerById("90542226181988352").channels.get(0)
+            var generalChannel: Channel = api.getServerById("90542226181988352").channels.get(0)    // 3 for developer
+            //generalChannel = api.getServerById("90542226181988352").channels.get(3)
+            //println("channel = ${generalChannel.name}")
             var msg = input.split("#msg ")
             generalChannel.sendMessage("${msg[1]}")
         }
