@@ -45,15 +45,10 @@
 
 
     <repositories>
+
         <repository>
             <id>javacord-repo</id>
             <url>http://repo.bastian-oppermann.de</url>
-        </repository>
-
-        <repository>
-            <id>revonline-repository</id>
-            <name>Revonline Maven Repository</name>
-            <url>http://revonline.comuf.com/maven3/</url>
         </repository>
 
     </repositories>
@@ -69,13 +64,6 @@
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.besaba.revonline</groupId>
-            <artifactId>Pastebin</artifactId>
-            <version>0.1.1</version>
-        </dependency>
-
 
     </dependencies>
 

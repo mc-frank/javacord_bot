@@ -11,6 +11,7 @@ import de.btobastian.javacord.listener.server.ServerMemberRemoveListener
 import de.btobastian.javacord.listener.user.UserChangeNameListener
 import de.btobastian.javacord.listener.voice.VoiceChannelChangeNameListener
 import de.btobastian.javacord.message.Message
+import de.btobastian.javacord.message.MessageBuilder
 import java.io.File
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
@@ -58,7 +59,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
         // Respond to BotBT's penis functions
         if(user.equals("BotBT")) {
-            if(msg.contains("8") && msg.contains("=3")) {
+            if(msg.contains("8")) {
                 message.reply("( ͡° ͜ʖ ͡°)")
             }
         }
@@ -69,8 +70,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         * */
 
         if(msg.equals("#bot")) {
-            // TODO: post commands
-            message.reply("Bot is being re-written shitlord")
+            postCommands(message)
+        }
+
+        else if(msg.contains("#kotlin")){
+            message.reply("All of this bot is now in Kotlin ya dumb-dumb :)")
         }
         else if(msg.contains("#bot-sys")) {
             var runtime: Runtime = Runtime.getRuntime()
@@ -79,6 +83,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             var details: String = "CPU(s) -- " + runtime.availableProcessors() + ", OS -- " + System.getProperty("os.name") + ", Total memory to JVM -- " + runtime.totalMemory() + "KB, Uptime -- " + uptime
             message.reply(details)
         }
+
         else if(msg.contains("#filter")) {
             var log: log = log()
 
@@ -88,10 +93,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             var count = log.filterText(word)
             message.reply("$word has been mentioned in $count messages")
         }
-        else if(msg.contains("#kotlin")){
-            message.reply("All of this bot is now in Kotlin ya dumb-dumb :)")
-        }
-
         else if(msg.contains("#get-funcs")) {
             //filefunc.getFunctions()
 
@@ -143,13 +144,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 message.channelReceiver.sendFile(file)
             }
         }
-        else if(msg.contains("#paste")) {
-            var paste: String? = msg.substring(7, msg.length)
-
-            // dis bit a secret ;)
-            message.reply(pasteText(paste))
-        }
-
         else if(msg.contains("#stop")){
             if(user.equals("MCFrank")) {
                 // Stop the bot
@@ -187,6 +181,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         var log: log = log()
         log.setNewFileName(log._FILENAME)
         log.setNewFileText( ("[$channel] $user deleted message: $msg") )
+        println("[$channel] $user deleted message: $msg")
         log.writeFile()
     }
 
@@ -217,6 +212,21 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
     override fun onVoiceChannelChangeName(api: DiscordAPI, channel: VoiceChannel, oldName: String) {
 
+    }
+
+
+    //
+
+    fun postCommands(message: Message) {
+        var channel = message.channelReceiver
+        channel.sendMessage(MessageBuilder()
+                .appendCode("", "filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord log")
+                .appendCode("", "get-funcs - Retrieves list of functions in the file currently")
+                .appendCode("", "status <status> - Updates the status of the bot to the argument")
+                .appendCode("", "avatar <user> - Posts the image of the user specified, currently must be the exact name of the user")
+                .appendCode("", "stop - Stops the bot, I can only be slain by the dank MCFrank")
+
+                .build())
     }
 
 }
