@@ -220,7 +220,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
     fun postCommands(message: Message) {
         var channel = message.channelReceiver
         channel.sendMessage(MessageBuilder()
-                .appendCode("", "filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord log")
+                .append("My functions are:")
+                .appendCode("", "filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord com.unwin.discordbot.log")
                 .appendCode("", "get-funcs - Retrieves list of functions in the file currently")
                 .appendCode("", "status <status> - Updates the status of the bot to the argument")
                 .appendCode("", "avatar <user> - Posts the image of the user specified, currently must be the exact name of the user")

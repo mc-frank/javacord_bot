@@ -9,7 +9,6 @@ import kotlin.text.startsWith
 /**
  * Created by unwin on 10/01/2016.
  */
-
 fun main(args: Array<String>) {
     val api = Javacord.getApi()
 
@@ -42,18 +41,17 @@ fun main(args: Array<String>) {
     api.registerListener(mainListener())
 
     // Do console based commands
-    while(true) {
+    while (true) {
         println("Commands ready: ")
         // Gonna make some command line arguments available to be used with the bot
         var input = readLine()
-        if(input!!.startsWith("#msg", true)) {
+        if (input!!.startsWith("#msg", true)) {
             var generalChannel: Channel = api.getServerById("90542226181988352").channels.get(0)    // 3 for developer
             //generalChannel = api.getServerById("90542226181988352").channels.get(3)
             //println("channel = ${generalChannel.name}")
             var msg = input.split("#msg ")
             generalChannel.sendMessage("${msg[1]}")
-        }
-        else if(input.startsWith("~", true)) {
+        } else if (input.startsWith("~", true)) {
 
         }
     }

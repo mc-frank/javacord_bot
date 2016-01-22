@@ -3,10 +3,12 @@
 .idea/
 target/
 pics/
+out/
 bot-log.txt
 pass.txt
 swearwords.txt
 ids.txt
+*.bat
 
 
 # Windows image file caches
