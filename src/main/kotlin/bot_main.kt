@@ -51,8 +51,14 @@ fun main(args: Array<String>) {
             //println("channel = ${generalChannel.name}")
             var msg = input.split("#msg ")
             generalChannel.sendMessage("${msg[1]}")
-        } else if (input.startsWith("~", true)) {
-
+        }
+        else if(input.startsWith("#status")){
+            var word: String = input.substring(8, input.length)
+            word.trim()
+            api.game = word
+        }
+        else if (input.startsWith("#stop", true)) {
+            System.exit(-1)
         }
     }
 }

@@ -67,6 +67,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         /*
         *
         * Start of cluster fuck
+        *
         * */
 
         if(msg.equals("#bot")) {
@@ -152,9 +153,9 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         }
 
         // Reply with to a function in the file with the corresponding action
-        loop@ for(i in 0..filefunc.max_size-1) {
+        check@ for(i in 0..filefunc.max_size-1) {
             if(_functions[i].length < 1){
-                break@loop
+                break@check
             }
             else {
                 if(msg.contains(_functions[i])) {
