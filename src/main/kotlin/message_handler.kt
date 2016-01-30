@@ -27,7 +27,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         ServerJoinListener, ChannelChangeNameListener, ChannelChangeTopicListener, VoiceChannelChangeNameListener
 {
 
-    protected val admins: Array<String> = arrayOf("vind", "mongzords", "Lucentconor", "MCFrank")
+    protected val admins: Array<String> = arrayOf("vind", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
 
     private val filefunc: fileFunctions = fileFunctions()
     public var _functions: Array<String> = filefunc.functions
@@ -58,6 +58,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         }
 
         // Respond to BotBT's penis functions
+        // TODO: Fix this shit
         if(user.equals("BotBT")) {
             if(msg.contains("8")) {
                 message.reply("( ͡° ͜ʖ ͡°)")
@@ -94,20 +95,33 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             var count = log.filterText(word)
             message.reply("$word has been mentioned in $count messages")
         }
-        else if(msg.contains("#get-funcs")) {
-            //filefunc.getFunctions()
+        else if(msg.contains("#broadcast")) {
+            // TODO: This will allow a user to broadcast a message to all the channels they have permission to
 
+            if(admins.contains(user)){
+                var serverId = api.getServerById("JJG")
+            }
+        }
+
+        else if(msg.contains("#get-funcs")) {
             var funcSize: Int = 0
             for (i in 0..filefunc.max_size - 1) {
-                println("functions length = ${_functions[i].length}")
+                //println("functions length = ${_functions[i].length}")
                 if (_functions[i].length < 1 && _actions[i].length < 1) {
-                    funcSize = i - 1
+                    funcSize = i
                     break;
                 }
             }
             message.reply("There are $funcSize functions in the file currently:")
             _functions.forEach { message.reply(it) }
         }
+        else if(msg.contains("#write-funcs")) {
+            // This entire function assumes the user knows what they're doing D:
+            var newFuncsLong = msg.substring(13, msg.length)
+            var newFuncs = newFuncsLong.split(", ")
+            filefunc.writeFunctions(newFuncs.toTypedArray())
+        }
+
         else if(msg.contains("#status")) {
             var word: String = msg.substring(8, msg.length)
             word.trim()
@@ -154,6 +168,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
         // Reply with to a function in the file with the corresponding action
         check@ for(i in 0..filefunc.max_size-1) {
+            println("function = ${_functions[i]}")
             if(_functions[i].length < 1){
                 break@check
             }
@@ -163,7 +178,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
             }
         }
-
     }
 
     override fun onMessageEdit(api: DiscordAPI, message: Message, string: String) {
@@ -181,8 +195,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
         var log: log = log()
         log.setNewFileName(log._FILENAME)
-        log.setNewFileText( ("[$channel] $user deleted message: $msg") )
-        println("[$channel] $user deleted message: $msg")
+        log.setNewFileText( ("[$channel] $user's message was deleted: $msg") )
+        println("[$channel] $user's message was deleted: $msg")
         log.writeFile()
     }
 
@@ -221,11 +235,13 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
     fun postCommands(message: Message) {
         var channel = message.channelReceiver
         channel.sendMessage(MessageBuilder()
-                .append("My functions are:")
-                .appendCode("", "filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord com.unwin.discordbot.log")
-                .appendCode("", "get-funcs - Retrieves list of functions in the file currently")
+                .append("My functions are (everyone):\n")
+                .appendCode("", "filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord bot-log.txt")
+                .appendCode("", "get-funcs - Retrieves list of dynamic functions in the file currently")
+                .appendCode("", "avatar <user> - Posts the image of the user specified, currently must be the exact name of the user\n")
+                .append("Admin/Moderator only:\n")
+                .appendCode("", "write-funcs new-function1 : new-action1 - Rewrites all the dynamic functions and actions in the file with new ones")
                 .appendCode("", "status <status> - Updates the status of the bot to the argument")
-                .appendCode("", "avatar <user> - Posts the image of the user specified, currently must be the exact name of the user")
                 .appendCode("", "stop - Stops the bot, I can only be slain by the dank MCFrank")
 
                 .build())

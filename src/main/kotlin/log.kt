@@ -16,23 +16,29 @@ class log {
     /* Get the number of times filterText has been mentioned in the file */
     public fun filterText(filterText: String): Int{
         var count: Int = -1
-        var fstream: FileInputStream = FileInputStream(_FILENAME)
-        var din: DataInputStream = DataInputStream(fstream)
-        var br: BufferedReader = BufferedReader(InputStreamReader(din))
-        var strLine: String = ""
-        dowh@ do {
-            if(br.readLine() == null){
-                break@dowh
-            }
-            strLine = br.readLine()
-            var words = strLine.split(" ")
-            for(s: String in words) {
-                if(s.equals(filterText)) {
-                    count++
-                }
-            }
-        } while(true)
 
+        try{
+            var fstream: FileInputStream = FileInputStream(_FILENAME)
+            var din: DataInputStream = DataInputStream(fstream)
+            var br: BufferedReader = BufferedReader(InputStreamReader(din))
+            var strLine: String = ""
+            dowh@ do {
+                if(br.readLine() == null){
+                    break@dowh
+                }
+                strLine = br.readLine()
+                var words = strLine.split(" ")
+                for(s: String in words) {
+                    if(s.equals(filterText)) {
+                        count++
+                    }
+                }
+            } while(true)
+
+        }
+        catch(ex: Exception) {
+            println("Error in filterText: $ex")
+        }
 
 
         return count

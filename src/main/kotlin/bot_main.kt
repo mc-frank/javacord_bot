@@ -5,6 +5,9 @@ import java.io.File
 import kotlin.collections.listOf
 import kotlin.text.split
 import kotlin.text.startsWith
+import de.btobastian.javacord.*
+import kotlin.collections.forEach
+import kotlin.text.*
 
 /**
  * Created by unwin on 10/01/2016.
@@ -25,7 +28,8 @@ fun main(args: Array<String>) {
 
     api.connect(object : ReadyListener {
         override fun onReady() {
-            println("Connected to server with name: ${api.yourself.name}")
+            println("Connected to server with name: ${api.yourself.name} and id: ${api.yourself.id}")
+            setupAPI(api)
         }
 
         override fun onFail() {
@@ -33,12 +37,6 @@ fun main(args: Array<String>) {
         }
     })
 
-    api.game = "SPYING ON YOU >:)"
-
-    var filefunctions: fileFunctions = fileFunctions()
-    filefunctions.getFunctions()
-
-    api.registerListener(mainListener())
 
     // Do console based commands
     while (true) {
@@ -57,9 +55,27 @@ fun main(args: Array<String>) {
             word.trim()
             api.game = word
         }
+        else if(input.startsWith("#id")) {
+            var word: String = input.substring(4, input.length)
+            word.trim()
+
+            var users = api.users
+            users.forEach { println(it) }
+
+
+        }
         else if (input.startsWith("#stop", true)) {
             System.exit(-1)
         }
     }
+}
+
+fun setupAPI(api: DiscordAPI) {
+    api.game = "SPYING ON YOU >:)"
+
+    var filefunctions: fileFunctions = fileFunctions()
+    filefunctions.getFunctions()
+
+    api.registerListener(mainListener())
 }
 

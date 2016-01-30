@@ -6,11 +6,12 @@ import kotlin.text.trim
 /**
  * Created by unwin on 10/01/2016.
  */
-class fileFunctions {
+class fileFunctions{
     val _FUN_FILENAME: String = "functions.txt"
-    val max_size: Int = 100
+    val max_size: Int = 20
     var functions: Array<String> = Array<String>(max_size, {i -> ""})
     var actions: Array<String> = Array<String>(max_size, {i -> ""})
+
 
     /* Get the functions from the file */
     public fun getFunctions() {
@@ -37,22 +38,39 @@ class fileFunctions {
                 var ssTemp = sTemp.split(" : ")
 
                 functions[i] = ssTemp[0].trim()
+                mainL._functions[i] = functions[i]
                 actions[i] = ssTemp[1].trim()
-                //println("function = ${mainL._functions[i]}")
-                //println("action = ${mainL._actions[i]}")
+                mainL._actions[i] = actions[i]
 
             }
         }
 
 
-    }
-
-    /* Write function(s) to the file */
-    public fun writeFunctions() {
 
     }
 
-    /* editFunctions */
+    /* TODO: Write function(s) to the file */
+    public fun writeFunctions(newFunctions: Array<String>) {
+        getFunctions()
+
+        var nFunctions: Array<String> = Array<String> (max_size, {i -> ""} )
+        var nActions: Array<String> = Array<String> (max_size, {i -> ""} )
+        var nTemp: List<String>
+
+        for(n in 0..newFunctions.size-1) {
+            nTemp = newFunctions[n].split(" : ")
+
+            nFunctions[n] = nTemp[0]
+            println("new function = ${nFunctions[n]}")
+            nActions[n] = nTemp[1]
+            println("new action = ${nActions[n]}")
+
+        }
+
+
+    }
+
+    /* TODO: check this works - editFunctions */
     public fun editFunctions(newFunc: String, newAction: String) {
         getFunctions()
         var tempFunctions: Array<String> = arrayOf<String>()
@@ -67,6 +85,7 @@ class fileFunctions {
         }
     }
 
+    /* TODO: Figure out wtf I was doing with this */
     public fun listFunctions() {
 
         for(i in 0..max_size) {
@@ -76,4 +95,5 @@ class fileFunctions {
         }
 
     }
+
 }
