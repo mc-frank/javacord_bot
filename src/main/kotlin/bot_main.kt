@@ -70,6 +70,7 @@ fun main(args: Array<String>) {
     }
 }
 
+// Run when the api gets a connection to the server
 fun setupAPI(api: DiscordAPI) {
     api.game = "SPYING ON YOU >:)"
 
