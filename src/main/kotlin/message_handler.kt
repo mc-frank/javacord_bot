@@ -1,4 +1,4 @@
-import de.btobastian.javacord.*
+ import de.btobastian.javacord.*
 import de.btobastian.javacord.listener.channel.ChannelChangeNameListener
 import de.btobastian.javacord.listener.channel.ChannelChangeTopicListener
 import de.btobastian.javacord.listener.message.MessageCreateListener
@@ -12,9 +12,16 @@ import de.btobastian.javacord.listener.user.UserChangeNameListener
 import de.btobastian.javacord.listener.voice.VoiceChannelChangeNameListener
 import de.btobastian.javacord.message.Message
 import de.btobastian.javacord.message.MessageBuilder
+import jdk.nashorn.internal.parser.JSONParser
+import org.json.JSONObject
+import java.io.BufferedInputStream
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
+import java.net.HttpURLConnection
+import java.net.URL
 import kotlin.collections.forEach
 import kotlin.collections.toTypedArray
 import kotlin.text.*
@@ -159,6 +166,16 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 message.channelReceiver.sendFile(file)
             }
         }
+
+        else if(msg.contains("#daisy")) {
+            var daisyFetch = webstuff()
+            var link: String = daisyFetch.daisyLink as String
+        }
+
+        else if(msg.contains("#chuck") || msg.contains("#norris")) {
+            var webStuff = webstuff()
+            message.reply(webStuff.fetchJoke())
+        }
         else if(msg.contains("#stop")){
             if(user.equals("MCFrank")) {
                 // Stop the bot
@@ -168,7 +185,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
         // Reply with to a function in the file with the corresponding action
         check@ for(i in 0..filefunc.max_size-1) {
-            println("function = ${_functions[i]}")
+            //println("function = ${_functions[i]}")
             if(_functions[i].length < 1){
                 break@check
             }
