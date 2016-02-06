@@ -170,6 +170,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         else if(msg.contains("#daisy")) {
             var daisyFetch = webstuff()
             var link: String = daisyFetch.daisyLink as String
+            message.reply(link)
         }
 
         else if(msg.contains("#chuck") || msg.contains("#norris")) {

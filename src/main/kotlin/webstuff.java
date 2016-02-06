@@ -2,9 +2,7 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;
 import net.dean.jraw.http.oauth.OAuthData;
-import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
-import net.dean.jraw.paginators.SubredditPaginator;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.BufferedReader;
@@ -12,6 +10,16 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+
+/*
+*
+* This is all going to be rewritten in Kotlin,
+* I just found it easier to follow the API
+* in its native language of Java.
+*
+ */
+
 
 /**
  * Created by unwin on 03-Feb-16.
@@ -63,7 +71,6 @@ public class webstuff {
 
             int i = 0;
             while( (line = bRead.readLine()) != null) {
-                System.out.printf("line = %s\n", line);
                 creds[i] = line;
                 i++;
             }
@@ -76,9 +83,10 @@ public class webstuff {
         OAuthData authData = redditClient.getOAuthHelper().easyAuth(credentials);
         redditClient.authenticate(authData);
 
-        SubredditPaginator subredditPaginator = new SubredditPaginator(redditClient, "DaisyRidley");
-        Listing<Submission> post = subredditPaginator.next();
+        Submission post = redditClient.getRandomSubmission("DaisyRidley");
+        String postTitle = post.getTitle();
 
+        link = postTitle + " " + post.getUrl();
 
         return link;
     }
