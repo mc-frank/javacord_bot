@@ -80,8 +80,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         else if(msg.contains("#bot-sys")) {
             var runtime: Runtime = Runtime.getRuntime()
             var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
-            var uptime: Long = rb.uptime / 1000
-            var details: String = "CPU(s) -- " + runtime.availableProcessors() + ", OS -- " + System.getProperty("os.name") + ", Total memory to JVM -- " + runtime.totalMemory() + "KB, Uptime -- " + uptime + " seconds"
+            var uptime = rb.uptime / 1000
+            var details: String = "CPU(s) -- " + runtime.availableProcessors() + ", OS -- " + System.getProperty("os.name") + ", Total memory to JVM -- " + runtime.totalMemory() + "KB, Uptime -- " + (uptime/60) + " minutes"
             message.reply(details)
         }
 
@@ -165,8 +165,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             message.reply(link)
         }
         else if(msg.contains("#/r/")){
-            var word = msg.substring(4, msg.trim().length)
+            var subredditName = msg.substring(4, msg.trim().length)
             // TODO: Do subreddit stuff with this.
+            var web = web()
+            var link = web.randomSubredditPost(subredditName)
+            message.reply(link)
         }
 
         else if(msg.contains("#chuck") || msg.contains("#norris")) {

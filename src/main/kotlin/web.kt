@@ -1,6 +1,7 @@
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.UserAgent
 import net.dean.jraw.http.oauth.Credentials
+import net.dean.jraw.models.Submission
 
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
@@ -47,6 +48,39 @@ class web {
     fun getDaisyLink(): String {
         var link = "link-null"
 
+        var redditClient = getRedditClient()
+
+        var post = redditClient.getRandomSubmission("DaisyRidley")
+        var postTitle = post.title
+        var postLink = post.url
+
+        link = postTitle + " - " + postLink
+
+        return link
+    }
+
+    fun randomSubredditPost(subredditName: String): String {
+        var link = "link-null"
+
+        var redditClient = getRedditClient()
+        var post: Submission
+        while(true) {
+            post = redditClient.getRandomSubmission(subredditName)
+            if(post.isSelfPost || post.selftext.length > 0){
+                //Do nothing, it's got a bad link and so needs to find another.
+            } else {
+                break;
+            }
+
+        }
+        link =  post.title + " - " + post.url
+
+        return link
+    }
+
+
+    //JRAW Reddit Stuff
+    private fun getRedditClient(): RedditClient {
         var userAgent = UserAgent.of("discord-bot", "com.unwin.discord-bot", "v2.0", "fcumbadass")
         var redditClient = RedditClient(userAgent)
 
@@ -61,13 +95,7 @@ class web {
         var authData = redditClient.oAuthHelper.easyAuth(credentials)
         redditClient.authenticate(authData)
 
-        var post = redditClient.getRandomSubmission("DaisyRidley")
-        var postTitle = post.title
-        var postLink = post.url
-
-        link = postTitle + " - " + postLink
-
-        return link
+        return redditClient
     }
 
 }
