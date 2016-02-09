@@ -74,7 +74,7 @@ fun main(args: Array<String>) {
 fun setupAPI(api: DiscordAPI) {
     api.game = "SPYING ON YOU >:)"
 
-    var filefunctions: fileFunctions = fileFunctions()
+    var filefunctions: file_functions = file_functions()
     filefunctions.getFunctions()
 
     api.registerListener(mainListener())

@@ -12,19 +12,12 @@ import de.btobastian.javacord.listener.user.UserChangeNameListener
 import de.btobastian.javacord.listener.voice.VoiceChannelChangeNameListener
 import de.btobastian.javacord.message.Message
 import de.btobastian.javacord.message.MessageBuilder
-import jdk.nashorn.internal.parser.JSONParser
-import org.json.JSONObject
-import java.io.BufferedInputStream
-import java.io.BufferedReader
 import java.io.File
-import java.io.InputStreamReader
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
-import java.net.HttpURLConnection
-import java.net.URL
 import kotlin.collections.forEach
 import kotlin.collections.toTypedArray
-import kotlin.text.*
+ import kotlin.text.*
 
 /**
  * Created by unwin on 10/01/2016.
@@ -36,7 +29,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
     protected val admins: Array<String> = arrayOf("vind", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
 
-    private val filefunc: fileFunctions = fileFunctions()
+    private val filefunc: file_functions = file_functions()
     public var _functions: Array<String> = filefunc.functions
     public var _actions: Array<String> = filefunc.actions
 
@@ -65,7 +58,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         }
 
         // Respond to BotBT's penis functions
-        // TODO: Fix this shit
         if(user.equals("BotBT")) {
             if(msg.contains("8")) {
                 message.reply("( ͡° ͜ʖ ͡°)")
@@ -89,7 +81,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             var runtime: Runtime = Runtime.getRuntime()
             var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
             var uptime: Long = rb.uptime / 1000
-            var details: String = "CPU(s) -- " + runtime.availableProcessors() + ", OS -- " + System.getProperty("os.name") + ", Total memory to JVM -- " + runtime.totalMemory() + "KB, Uptime -- " + uptime
+            var details: String = "CPU(s) -- " + runtime.availableProcessors() + ", OS -- " + System.getProperty("os.name") + ", Total memory to JVM -- " + runtime.totalMemory() + "KB, Uptime -- " + uptime + " seconds"
             message.reply(details)
         }
 
@@ -168,14 +160,18 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         }
 
         else if(msg.contains("#daisy")) {
-            var daisyFetch = webstuff()
-            var link: String = daisyFetch.daisyLink as String
+            var web = web()
+            var link = web.getDaisyLink()
             message.reply(link)
+        }
+        else if(msg.contains("#/r/")){
+            var word = msg.substring(4, msg.trim().length)
+            // TODO: Do subreddit stuff with this.
         }
 
         else if(msg.contains("#chuck") || msg.contains("#norris")) {
-            var webStuff = webstuff()
-            message.reply(webStuff.fetchJoke())
+            var web = web()
+            message.reply(web.fetchJoke())
         }
         else if(msg.contains("#stop")){
             if(user.equals("MCFrank")) {

@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>groupId</groupId>
@@ -58,7 +59,6 @@
         </plugins>
     </build>
 
-
     <repositories>
 
         <repository>
@@ -74,7 +74,6 @@
             <name>bintray</name>
             <url>http://dl.bintray.com/thatjavanerd/maven</url>
         </repository>
-
 
     </repositories>
 
@@ -104,7 +103,7 @@
     </dependencies>
 
     <properties>
-        <kotlin.version>1.0.0-beta-4584</kotlin.version>
+        <kotlin.version>1.0.0-rc-1036</kotlin.version>
     </properties>
 
 </project>

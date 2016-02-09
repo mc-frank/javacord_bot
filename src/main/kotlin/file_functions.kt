@@ -6,7 +6,7 @@ import kotlin.text.trim
 /**
  * Created by unwin on 10/01/2016.
  */
-class fileFunctions{
+class file_functions{
     val _FUN_FILENAME: String = "functions.txt"
     val max_size: Int = 20
     var functions: Array<String> = Array<String>(max_size, {i -> ""})

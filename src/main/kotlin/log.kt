@@ -22,18 +22,17 @@ class log {
             var din: DataInputStream = DataInputStream(fstream)
             var br: BufferedReader = BufferedReader(InputStreamReader(din))
             var strLine: String = ""
-            dowh@ do {
-                if(br.readLine() == null){
-                    break@dowh
-                }
-                strLine = br.readLine()
+
+            // Check for the filter word in each line and if so, increment the counter
+            br.forEachLine {
+                strLine = it
                 var words = strLine.split(" ")
                 for(s: String in words) {
                     if(s.equals(filterText)) {
-                        count++
+                        ++count
                     }
                 }
-            } while(true)
+            }
 
         }
         catch(ex: Exception) {
