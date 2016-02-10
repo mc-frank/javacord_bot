@@ -10,6 +10,7 @@ import java.io.File
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.concurrent.thread
 
 /**
  * Created by unwin on 06-Feb-16.
@@ -64,16 +65,16 @@ class web {
 
         var redditClient = getRedditClient()
         var post: Submission
-        while(true) {
+        while (true) {
             post = redditClient.getRandomSubmission(subredditName)
-            if(post.isSelfPost || post.selftext.length > 0){
+            if (post.selftext.length > 0) {
                 //Do nothing, it's got a bad link and so needs to find another.
             } else {
                 break;
             }
 
         }
-        link =  post.title + " - " + post.url
+        link = post.title + " - " + post.url
 
         return link
     }
@@ -88,7 +89,7 @@ class web {
         try {
             creds = File("pass.txt").readLines()
         } catch (ex: Exception) {
-            // File not found or something.
+            println("Error in getRedditClient - ${ex.message}")
         }
 
         var credentials = Credentials.script(creds[2], creds[3], creds[4], creds[5])

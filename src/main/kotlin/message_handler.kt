@@ -17,6 +17,7 @@ import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
 import kotlin.collections.forEach
 import kotlin.collections.toTypedArray
+ import kotlin.concurrent.thread
  import kotlin.text.*
 
 /**
@@ -161,15 +162,19 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
         else if(msg.contains("#daisy")) {
             var web = web()
-            var link = web.getDaisyLink()
-            message.reply(link)
+            thread() {
+                var link = web.getDaisyLink()
+                message.reply(link)
+            }
         }
         else if(msg.contains("#/r/")){
             var subredditName = msg.substring(4, msg.trim().length)
-            // TODO: Do subreddit stuff with this.
             var web = web()
-            var link = web.randomSubredditPost(subredditName)
-            message.reply(link)
+            var link: String
+            thread() {
+                link = web.randomSubredditPost(subredditName)
+                message.reply(link)
+            }
         }
 
         else if(msg.contains("#chuck") || msg.contains("#norris")) {
