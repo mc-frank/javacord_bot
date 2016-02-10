@@ -37,19 +37,22 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
     override fun onMessageCreate(api: DiscordAPI, message: Message) {
         filefunc.getFunctions()
+        var log: log = log()
+        log.setNewFileName(log._FILENAME)
 
         var msg: String = message.content
         var user: String = message.author.name
         var channel: String? = message.channelReceiver.name
 
+        // Ignore if the message is a private message
         if(message.isPrivateMessage) {
             println("$user sent a private message - $msg")
+            log.setNewFileText("[PRIVATE MESSAGE] $user > $msg")
+            log.writeFile()
             return
         }
 
         println("[$channel] $user > $msg")
-        var log: log = log()
-        log.setNewFileName(log._FILENAME)
         log.setNewFileText( ("[$channel] $user > $msg") )
         log.writeFile()
 
@@ -70,133 +73,134 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         * Start of cluster fuck
         *
         * */
-
-        if(msg.equals("#bot")) {
-            postCommands(message)
-        }
-
-        else if(msg.contains("#kotlin")){
-            message.reply("All of this bot is now in Kotlin ya dumb-dumb :)")
-        }
-        else if(msg.contains("#bot-sys")) {
-            var runtime: Runtime = Runtime.getRuntime()
-            var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
-            var uptime = rb.uptime / 1000
-            var details: String = "CPU(s) -- " + runtime.availableProcessors() + ", OS -- " + System.getProperty("os.name") + ", Total memory to JVM -- " + runtime.totalMemory() + "KB, Uptime -- " + (uptime/60) + " minutes"
-            message.reply(details)
-        }
-
-        else if(msg.contains("#filter")) {
-            var log: log = log()
-
-            var word: String = msg.substring(8, msg.length)
-            word.trim()
-
-            var count = log.filterText(word)
-            message.reply("$word has been mentioned in $count messages")
-        }
-        else if(msg.contains("#broadcast")) {
-            // TODO: This will allow a user to broadcast a message to all the channels they have permission to
-
-            if(admins.contains(user)){
-                var serverId = api.getServerById("JJG")
+        thread() {
+            if(msg.contains("#bot")) {
+                postCommands(message)
             }
-        }
+            else if(msg.contains("#bot-sys")) {
+                var runtime: Runtime = Runtime.getRuntime()
+                var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
+                var uptime = rb.uptime / 1000
+                var details: String = "CPU(s) -- " + runtime.availableProcessors() + ", OS -- " + System.getProperty("os.name") + ", Total memory to JVM -- " + runtime.totalMemory() + "KB, Uptime -- " + (uptime/60) + " minutes"
+                message.reply(details)
+            }
 
-        else if(msg.contains("#get-funcs")) {
-            var funcSize: Int = 0
-            for (i in 0..filefunc.max_size - 1) {
-                //println("functions length = ${_functions[i].length}")
-                if (_functions[i].length < 1 && _actions[i].length < 1) {
-                    funcSize = i
-                    break;
+            else if(msg.startsWith("#filter")) {
+                var log: log = log()
+
+                var word: String = msg.substring(8, msg.length)
+                word.trim()
+
+                var count = log.filterText(word)
+                message.reply("$word has been mentioned in $count messages")
+            }
+            else if(msg.contains("#broadcast")) {
+                // TODO: This will allow a user to broadcast a message to all the channels they have permission to
+
+                if(admins.contains(user)){
+                    var serverId = api.getServerById("JJG")
                 }
             }
-            message.reply("There are $funcSize functions in the file currently:")
-            _functions.forEach { message.reply(it) }
-        }
-        else if(msg.contains("#write-funcs")) {
-            // This entire function assumes the user knows what they're doing D:
-            var newFuncsLong = msg.substring(13, msg.length)
-            var newFuncs = newFuncsLong.split(", ")
-            filefunc.writeFunctions(newFuncs.toTypedArray())
-        }
 
-        else if(msg.contains("#status")) {
-            var word: String = msg.substring(8, msg.length)
-            word.trim()
-            api.game = word
-        }
-        else if(msg.contains("#avatar")) {
-            var word: String = msg.substring(8, msg.length).toLowerCase()
-            var filename: String = "pics/avatar-$word.jpg"
-            var reply: String = ""
+            else if(msg.contains("#get-funcs")) {
+                thread() {
+                    var funcSize: Int = 0
+                    for (i in 0..filefunc.max_size - 1) {
+                        //println("functions length = ${_functions[i].length}")
+                        if (_functions[i].length < 1 && _actions[i].length < 1) {
+                            funcSize = i
+                            break;
+                        }
+                    }
+                    message.reply("There are $funcSize functions in the file currently:")
+                    _functions.forEach { message.reply(it) }
+                }
+            }
+            else if(msg.startsWith("#write-funcs")) {
+                // This entire function assumes the user knows what they're doing D:
+                var newFuncsLong = msg.substring(13, msg.length)
+                var newFuncs = newFuncsLong.split(", ")
+                filefunc.writeFunctions(newFuncs.toTypedArray())
+            }
 
-            var avatar: ByteArray = ByteArray(0)
-            var file: File = File(filename)
+            else if(msg.contains("#status")) {
+                var word: String = msg.substring(8, msg.length)
+                word.trim()
+                api.game = word
+            }
+            else if(msg.contains("#avatar")) {
+                thread() {
+                    var word: String = msg.substring(8, msg.length).toLowerCase()
+                    var filename: String = "pics/avatar-$word.jpg"
+                    var reply: String = ""
 
-            var users: Array<User> = api.users.toTypedArray()
+                    var avatar: ByteArray = ByteArray(0)
+                    var file: File = File(filename)
 
-            loop@ for(i in 0..users.size-1) {
-                var usr = users[i]
-                if(word.contains(usr.name.toLowerCase())) {
-                    if(File(filename).exists()) {
-                        //
+                    var users: Array<User> = api.users.toTypedArray()
+
+                    loop@ for(i in 0..users.size-1) {
+                        var usr = users[i]
+                        if(word.contains(usr.name.toLowerCase())) {
+                            if(File(filename).exists()) {
+                                //
+                            }
+                            else {
+                                avatar = usr.avatarAsBytearray
+                                file.appendBytes(avatar)
+                            }
+                            reply = "$word's avatar:"
+                        }
+                    }
+
+                    if(reply.length == 0) {
+                        message.reply("User not found")
                     }
                     else {
-                        avatar = usr.avatarAsBytearray
-                        file.appendBytes(avatar)
+                        message.reply(reply)
+                        message.channelReceiver.sendFile(file)
                     }
-                    reply = "$word's avatar:"
                 }
             }
 
-            if(reply.length == 0) {
-                message.reply("User not found")
+            else if(msg.contains("#daisy")) {
+                var web = web()
+                thread() {
+                    var link = web.getDaisyLink()
+                    message.reply(link)
+                }
             }
-            else {
-                message.reply(reply)
-                message.channelReceiver.sendFile(file)
+            else if(msg.startsWith("#/r/")){
+                var subredditName = msg.substring(4, msg.trim().length)
+                var web = web()
+                var link: String
+                thread() {
+                    link = web.randomSubredditPost(subredditName)
+                    message.reply(link)
+                }
             }
-        }
 
-        else if(msg.contains("#daisy")) {
-            var web = web()
-            thread() {
-                var link = web.getDaisyLink()
-                message.reply(link)
+            else if(msg.contains("#chuck") || msg.contains("#norris")) {
+                var web = web()
+                message.reply(web.fetchJoke())
             }
-        }
-        else if(msg.contains("#/r/")){
-            var subredditName = msg.substring(4, msg.trim().length)
-            var web = web()
-            var link: String
-            thread() {
-                link = web.randomSubredditPost(subredditName)
-                message.reply(link)
+            else if(msg.contains("#stop")){
+                if(user.equals("MCFrank")) {
+                    // Stop the bot
+                    System.exit(-1)
+                }
             }
-        }
 
-        else if(msg.contains("#chuck") || msg.contains("#norris")) {
-            var web = web()
-            message.reply(web.fetchJoke())
-        }
-        else if(msg.contains("#stop")){
-            if(user.equals("MCFrank")) {
-                // Stop the bot
-                System.exit(-1)
-            }
-        }
-
-        // Reply with to a function in the file with the corresponding action
-        check@ for(i in 0..filefunc.max_size-1) {
-            //println("function = ${_functions[i]}")
-            if(_functions[i].length < 1){
-                break@check
-            }
-            else {
-                if(msg.contains(_functions[i])) {
-                    message.reply(_actions[i])
+            // Reply with to a function in the file with the corresponding action
+            check@ for(i in 0..filefunc.max_size-1) {
+                //println("function = ${_functions[i]}")
+                if(_functions[i].length < 1){
+                    break@check
+                }
+                else {
+                    if(msg.contains(_functions[i])) {
+                        message.reply(_actions[i])
+                    }
                 }
             }
         }
@@ -261,6 +265,9 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 .appendCode("", "filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord bot-log.txt")
                 .appendCode("", "get-funcs - Retrieves list of dynamic functions in the file currently")
                 .appendCode("", "avatar <user> - Posts the image of the user specified, currently must be the exact name of the user\n")
+                .appendCode("", "/r/<subreddit> - Posts a random link from <subreddit>")
+                .appendCode("", "Daisy - Posts a random link from /r/DaisyRidley")
+                .appendCode("", "Chuck or Norris - Posts a random Chuck Norris joke")
                 .append("Admin/Moderator only:\n")
                 .appendCode("", "write-funcs new-function1 : new-action1 - Rewrites all the dynamic functions and actions in the file with new ones")
                 .appendCode("", "status <status> - Updates the status of the bot to the argument")
