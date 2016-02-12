@@ -1,4 +1,5 @@
 import net.dean.jraw.RedditClient
+import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.UserAgent
 import net.dean.jraw.http.oauth.Credentials
 import net.dean.jraw.models.Submission
@@ -63,18 +64,28 @@ class web {
     fun randomSubredditPost(subredditName: String): String {
         var link = "link-null"
 
-        var redditClient = getRedditClient()
-        var post: Submission
-        while (true) {
-            post = redditClient.getRandomSubmission(subredditName)
-            if (post.selftext.length > 0) {
-                //Do nothing, it's got a bad link and so needs to find another.
-            } else {
-                break;
+        try {
+            var redditClient = getRedditClient()
+            var post: Submission
+            var subreddit = redditClient.getSubreddit(subredditName)
+            // If my pull request is successful this will change to .isQuarantined
+            if(subreddit.isNsfw){
+                //
             }
+            while (true) {
+                post = redditClient.getRandomSubmission(subredditName)
+                if (post.selftext.length > 0) {
+                    //Do nothing, it's got a bad link and so needs to find another.
+                } else {
+                    break;
+                }
 
+            }
+            link = post.title + " - " + post.url
+        } catch(ex: NetworkException) {
+            println("Error in randomSubredditPost - ${ex.message}")
+            link = "Error in randomSubredditPost - ${ex.message}"
         }
-        link = post.title + " - " + post.url
 
         return link
     }

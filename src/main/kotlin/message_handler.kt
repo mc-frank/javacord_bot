@@ -74,14 +74,14 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         *
         * */
         thread() {
-            if(msg.contains("#bot")) {
+            if(msg.equals("#bot")) {
                 postCommands(message)
             }
             else if(msg.contains("#bot-sys")) {
                 var runtime: Runtime = Runtime.getRuntime()
                 var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
                 var uptime = rb.uptime / 1000
-                var details: String = "CPU(s) -- " + runtime.availableProcessors() + ", OS -- " + System.getProperty("os.name") + ", Total memory to JVM -- " + runtime.totalMemory() + "KB, Uptime -- " + (uptime/60) + " minutes"
+                var details: String = "CPU(s) -- " + runtime.availableProcessors() + "\nOS -- " + System.getProperty("os.name") + "\nFree memory to JVM -- " + runtime.freeMemory() / (1024*1024) + " MB \nUptime -- " + (uptime/60) + " minutes"
                 message.reply(details)
             }
 
@@ -172,11 +172,14 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
             else if(msg.startsWith("#/r/")){
                 var subredditName = msg.substring(4, msg.trim().length)
-                var web = web()
-                var link: String
-                thread() {
+                if(subredditName.contains(" ")) {
+                    message.reply("Subreddit cannot have a space in it")
+                } else {
+                    var web = web()
+                    var link: String
                     link = web.randomSubredditPost(subredditName)
                     message.reply(link)
+
                 }
             }
 
