@@ -117,10 +117,20 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
             }
             else if(msg.startsWith("#write-funcs")) {
-                // This entire function assumes the user knows what they're doing D:
-                var newFuncsLong = msg.substring(13, msg.length)
-                var newFuncs = newFuncsLong.split(", ")
-                filefunc.writeFunctions(newFuncs.toTypedArray())
+                var userIsAdmin = false
+                admins.forEach {
+                    if( (user.equals(it)) ) {
+                        userIsAdmin = true
+                    }
+                }
+                if(userIsAdmin == true) {
+                    // This entire function assumes the user knows what they're doing D:
+                    var newFuncsLong = msg.substring(13, msg.length)
+                    var newFuncs = newFuncsLong.split(", ")
+                    filefunc.writeFunctions(newFuncs.toTypedArray())
+                } else {
+                    message.reply("This is still in works and so only admins can use it")
+                }
             }
 
             else if(msg.contains("#status")) {
