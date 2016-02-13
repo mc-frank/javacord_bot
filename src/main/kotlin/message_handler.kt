@@ -1,5 +1,10 @@
  import de.btobastian.javacord.*
-import de.btobastian.javacord.listener.channel.ChannelChangeNameListener
+ import de.btobastian.javacord.entities.Channel
+ import de.btobastian.javacord.entities.Server
+ import de.btobastian.javacord.entities.User
+ import de.btobastian.javacord.entities.message.Message
+ import de.btobastian.javacord.entities.message.MessageBuilder
+ import de.btobastian.javacord.listener.channel.ChannelChangeNameListener
 import de.btobastian.javacord.listener.channel.ChannelChangeTopicListener
 import de.btobastian.javacord.listener.message.MessageCreateListener
 import de.btobastian.javacord.listener.message.MessageDeleteListener
@@ -9,10 +14,8 @@ import de.btobastian.javacord.listener.server.ServerJoinListener
 import de.btobastian.javacord.listener.server.ServerMemberAddListener
 import de.btobastian.javacord.listener.server.ServerMemberRemoveListener
 import de.btobastian.javacord.listener.user.UserChangeNameListener
-import de.btobastian.javacord.listener.voice.VoiceChannelChangeNameListener
-import de.btobastian.javacord.message.Message
-import de.btobastian.javacord.message.MessageBuilder
-import java.io.File
+ import org.apache.http.concurrent.FutureCallback
+ import java.io.File
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
 import kotlin.collections.forEach
@@ -24,8 +27,7 @@ import kotlin.collections.toTypedArray
  * Created by unwin on 10/01/2016.
  */
 class mainListener: MessageCreateListener, MessageEditListener, TypingStartListener,
-        MessageDeleteListener, UserChangeNameListener, ServerMemberAddListener, ServerMemberRemoveListener,
-        ServerJoinListener, ChannelChangeNameListener, ChannelChangeTopicListener, VoiceChannelChangeNameListener
+        MessageDeleteListener, UserChangeNameListener, ServerJoinListener, ChannelChangeNameListener, ChannelChangeTopicListener
 {
 
     protected val admins: Array<String> = arrayOf("vind", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
@@ -57,13 +59,14 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         log.writeFile()
 
         // Ignore if message comes from bot
-        if(user.equals(api.yourself.name)) {
-            return
-        }
+        // TODO: not currently in the update of the API wrapper
+        //if(user.equals(api.yourself.name)) {
+        //    return
+        //}
 
         // Respond to BotBT's penis functions
         if(user.equals("BotBT")) {
-            if(msg.contains("8")) {
+            if(msg.contains("8") && msg.contains("=")) {
                 message.reply("( ͡° ͜ʖ ͡°)")
             }
         }
@@ -96,9 +99,14 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
             else if(msg.contains("#broadcast")) {
                 // TODO: This will allow a user to broadcast a message to all the channels they have permission to
+                var serverID: Server
+                serverID = api.getServerById("JJG")
 
-                if(admins.contains(user)){
-                    var serverId = api.getServerById("JJG")
+                var channels = serverID.channels
+                channels.forEach {
+                    //if() {
+                    //
+                    //}
                 }
             }
 
@@ -139,38 +147,38 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 api.game = word
             }
             else if(msg.contains("#avatar")) {
-                thread() {
-                    var word: String = msg.substring(8, msg.length).toLowerCase()
-                    var filename: String = "pics/avatar-$word.jpg"
-                    var reply: String = ""
+                var word: String = msg.substring(8, msg.length).toLowerCase()
+                var filename: String = "pics/avatar-$word.jpg"
+                var reply: String = ""
 
-                    var avatar: ByteArray = ByteArray(0)
-                    var file: File = File(filename)
+                var avatar: ByteArray = ByteArray(0)
+                var file: File = File(filename)
 
-                    var users: Array<User> = api.users.toTypedArray()
+                var users: Array<User> = api.users.toTypedArray()
 
-                    loop@ for(i in 0..users.size-1) {
-                        var usr = users[i]
-                        if(word.contains(usr.name.toLowerCase())) {
-                            if(File(filename).exists()) {
-                                //
-                            }
-                            else {
-                                avatar = usr.avatarAsBytearray
-                                file.appendBytes(avatar)
-                            }
-                            reply = "$word's avatar:"
+                loop@ for (i in 0..users.size - 1) {
+                    var usr = users[i]
+                    if (word.contains(usr.name.toLowerCase())) {
+                        if (File(filename).exists()) {
+                            //
+                        } else {
+                            var temp = usr.avatarAsByteArray
+                            avatar = temp.get()
+                            file.appendBytes(avatar)
                         }
-                    }
-
-                    if(reply.length == 0) {
-                        message.reply("User not found")
-                    }
-                    else {
-                        message.reply(reply)
-                        message.channelReceiver.sendFile(file)
+                        reply = "$word's avatar:"
                     }
                 }
+
+                if (file.length() < 1) {
+                    message.reply("Error: no avatar")
+                } else if (reply.length == 0) {
+                    message.reply("User not found")
+                } else {
+                    message.reply(reply)
+                    message.channelReceiver.sendFile(file)
+                }
+            }
             }
 
             else if(msg.contains("#daisy")) {
@@ -239,17 +247,9 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         log.writeFile()
     }
 
-    override fun onUserChangeName(api: DiscordAPI, user: User, oldName: String) {
+     override fun onUserChangeName(api: DiscordAPI, user: User, oldName: String) {
         var log: log = log()
         log.setNewFileName(log._FILENAME)
-    }
-
-    override fun onServerMemberAdd(api: DiscordAPI, server: Server, user: User) {
-
-    }
-
-    override fun onServerMemberRemove(api: DiscordAPI, server: Server, user: User) {
-
     }
 
     override fun onServerJoin(api: DiscordAPI, server: Server) {
@@ -261,10 +261,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
     }
 
     override fun onChannelChangeTopic(api: DiscordAPI, channel: Channel, oldTopic: String) {
-
-    }
-
-    override fun onVoiceChannelChangeName(api: DiscordAPI, channel: VoiceChannel, oldName: String) {
 
     }
 

@@ -1,11 +1,9 @@
-import de.btobastian.javacord.Channel
-import de.btobastian.javacord.impl.Javacord
-import de.btobastian.javacord.listener.ReadyListener
 import java.io.File
 import kotlin.collections.listOf
 import kotlin.text.split
 import kotlin.text.startsWith
 import de.btobastian.javacord.*
+import de.btobastian.javacord.entities.Channel
 import kotlin.collections.forEach
 import kotlin.text.*
 
@@ -23,19 +21,24 @@ fun main(args: Array<String>) {
         // File not found or something.
     }
 
-    api.email = creds[0]
-    api.password = creds[1]
+    api.setEmail(creds[0])
+    api.setPassword(creds[1])
 
-    api.connect(object : ReadyListener {
-        override fun onReady() {
+    /*
+    api.connect(FutureCallback<DiscordAPI>() {
+        override fun onSuccess(api: DiscordAPI) {
             println("Connected to server with name: ${api.yourself.name} and id: ${api.yourself.id}")
             setupAPI(api)
         }
 
-        override fun onFail() {
-            println("Connection failed to server")
+        override fun onFailure(t: Throwable) {
+            println("Connection failed to server - ${t.message}")
         }
     })
+    */
+
+    api.connectBlocking()
+    setupAPI(api)
 
 
     // Do console based commands
@@ -44,7 +47,7 @@ fun main(args: Array<String>) {
         // Gonna make some command line arguments available to be used with the bot
         var input = readLine()
         if (input!!.startsWith("#msg", true)) {
-            var generalChannel: Channel = api.getServerById("90542226181988352").channels.get(0)    // 3 for developer
+            var generalChannel: Channel = api.getServerById("90542226181988352").channels.elementAt(0)    // 3 for developer
             //generalChannel = api.getServerById("90542226181988352").channels.get(3)
             //println("channel = ${generalChannel.name}")
             var msg = input.split("#msg ")
