@@ -14,7 +14,7 @@ class log {
     var text: String = ""
 
     /* Get the number of times filterText has been mentioned in the file */
-    public fun filterText(filterText: String): Int{
+    fun filterText(filterText: String): Int{
         var count: Int = -1
 
         try{
@@ -44,17 +44,17 @@ class log {
     }
 
     /* Set the text of the file */
-    public fun setNewFileText(newText: String) {
+    fun setNewFileText(newText: String) {
         text = newText
     }
 
     /* Set the file name */
-    public fun setNewFileName(newFileName: String) {
+    fun setNewFileName(newFileName: String) {
         fileName = newFileName
     }
 
     /* Write the file */
-    public fun writeFile() {
+    fun writeFile() {
         try{
             var fWrite: FileWriter = FileWriter(fileName, true)
             var pWrite: PrintWriter = PrintWriter(fWrite)

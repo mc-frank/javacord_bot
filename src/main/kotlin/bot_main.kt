@@ -70,6 +70,13 @@ fun main(args: Array<String>) {
         else if (input.startsWith("#stop", true)) {
             System.exit(-1)
         }
+        else if (input.startsWith("#join-server")) {
+            var invite = input.substring(13, input.length)
+            if(invite.length == 0) {
+                println("No invite specified.")
+            }
+            api.acceptInvite(invite)
+        }
     }
 }
 

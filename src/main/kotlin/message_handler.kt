@@ -30,11 +30,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         MessageDeleteListener, UserChangeNameListener, ServerJoinListener, ChannelChangeNameListener, ChannelChangeTopicListener
 {
 
-    protected val admins: Array<String> = arrayOf("vind", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
+    private val admins: Array<String> = arrayOf("vind", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
 
     private val filefunc: file_functions = file_functions()
-    public var _functions: Array<String> = filefunc.functions
-    public var _actions: Array<String> = filefunc.actions
+    var _functions: Array<String> = filefunc.functions
+    var _actions: Array<String> = filefunc.actions
 
 
     override fun onMessageCreate(api: DiscordAPI, message: Message) {
@@ -58,11 +58,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         log.setNewFileText( ("[$channel] $user > $msg") )
         log.writeFile()
 
+
         // Ignore if message comes from bot
-        // TODO: not currently in the update of the API wrapper
-        //if(user.equals(api.yourself.name)) {
-        //    return
-        //}
+        if(user.equals(api.yourself.name)) {
+            return
+        }
 
         // Respond to BotBT's penis functions
         if(user.equals("BotBT")) {
@@ -111,34 +111,25 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
 
             else if(msg.contains("#get-funcs")) {
-                thread() {
-                    var funcSize: Int = 0
-                    for (i in 0..filefunc.max_size - 1) {
-                        //println("functions length = ${_functions[i].length}")
-                        if (_functions[i].length < 1 && _actions[i].length < 1) {
-                            funcSize = i
-                            break;
-                        }
+                var function_count = 0
+                for(a in 0..filefunc.max_size-1) {
+                    if(_functions[a].length != 0 && _actions[a].length != 0) {
+                        ++function_count
                     }
-                    message.reply("There are $funcSize functions in the file currently:")
-                    _functions.forEach { message.reply(it) }
                 }
+                var temp = Array(function_count, {i -> ""})
+                for(a in 0..temp.size-1) {
+                    temp[a] = _functions[a]
+                }
+                var reply_string = "There are $function_count functions in the file currently:\n"
+                temp.forEach {
+                    reply_string += "$it\n"
+                }
+                message.reply(reply_string)
             }
-            else if(msg.startsWith("#write-funcs")) {
-                var userIsAdmin = false
-                admins.forEach {
-                    if( (user.equals(it)) ) {
-                        userIsAdmin = true
-                    }
-                }
-                if(userIsAdmin == true) {
-                    // This entire function assumes the user knows what they're doing D:
-                    var newFuncsLong = msg.substring(13, msg.length)
-                    var newFuncs = newFuncsLong.split(", ")
-                    filefunc.writeFunctions(newFuncs.toTypedArray())
-                } else {
-                    message.reply("This is still in works and so only admins can use it")
-                }
+            else if(msg.startsWith("#add-func")) {
+                var newFunc = msg.substring(10, msg.length)
+                filefunc.writeFunction(newFunc)
             }
 
             else if(msg.contains("#status")) {
@@ -151,7 +142,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 var filename: String = "pics/avatar-$word.jpg"
                 var reply: String = ""
 
-                var avatar: ByteArray = ByteArray(0)
+                var avatar: ByteArray
                 var file: File = File(filename)
 
                 var users: Array<User> = api.users.toTypedArray()
@@ -159,8 +150,17 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 loop@ for (i in 0..users.size - 1) {
                     var usr = users[i]
                     if (word.contains(usr.name.toLowerCase())) {
+                        // Check if saved avatar is same as current one
                         if (File(filename).exists()) {
-                            //
+                            var savedAvatarBytes = File(filename).readBytes()
+                            // Checks if saved file is equal to current avatar
+                            if(savedAvatarBytes.equals(usr.avatarAsByteArray.get())) {
+                                // no change is needed
+                            } else {
+                                //saved file is different to current avatar and so new one needs to be downloaded
+                                file.delete()
+                                file.appendBytes(usr.avatarAsByteArray.get())
+                            }
                         } else {
                             var temp = usr.avatarAsByteArray
                             avatar = temp.get()
@@ -171,14 +171,13 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
 
                 if (file.length() < 1) {
-                    message.reply("Error: no avatar")
+                    message.reply("Error: user doesn't exist, or no avatar")
                 } else if (reply.length == 0) {
                     message.reply("User not found")
                 } else {
                     message.reply(reply)
                     message.channelReceiver.sendFile(file)
                 }
-            }
             }
 
             else if(msg.contains("#daisy")) {
@@ -206,9 +205,10 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 message.reply(web.fetchJoke())
             }
             else if(msg.contains("#stop")){
-                if(user.equals("MCFrank")) {
-                    // Stop the bot
-                    System.exit(-1)
+                admins.forEach {
+                    if(user.equals(it)) {
+                        System.exit(-1)
+                    }
                 }
             }
 
@@ -227,8 +227,16 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         }
     }
 
-    override fun onMessageEdit(api: DiscordAPI, message: Message, string: String) {
+    override fun onMessageEdit(api: DiscordAPI, message: Message, oldMessage: String) {
+        var usr = message.author
+        var originalMessage = oldMessage
+        var newMessage = message
+        var channel = message.channelReceiver
 
+        println("[$channel] $usr > EDITED MESSAGED $originalMessage [to] $newMessage")
+        var log = log()
+        log.setNewFileName(log._FILENAME)
+        log.setNewFileText("[$channel] $usr > EDITED MESSAGED $originalMessage [to] $newMessage")
     }
 
     override fun onTypingStart(api: DiscordAPI, user: User, channel: Channel?) {
@@ -247,7 +255,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         log.writeFile()
     }
 
-     override fun onUserChangeName(api: DiscordAPI, user: User, oldName: String) {
+    override fun onUserChangeName(api: DiscordAPI, user: User, oldName: String) {
         var log: log = log()
         log.setNewFileName(log._FILENAME)
     }
@@ -273,12 +281,12 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 .append("My functions are (everyone):\n")
                 .appendCode("", "filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord bot-log.txt")
                 .appendCode("", "get-funcs - Retrieves list of dynamic functions in the file currently")
+                .appendCode("", "add-func new-function1 : new-action1 - Adds a function to the functions file")
                 .appendCode("", "avatar <user> - Posts the image of the user specified, currently must be the exact name of the user\n")
                 .appendCode("", "/r/<subreddit> - Posts a random link from <subreddit>")
                 .appendCode("", "Daisy - Posts a random link from /r/DaisyRidley")
                 .appendCode("", "Chuck or Norris - Posts a random Chuck Norris joke")
                 .append("Admin/Moderator only:\n")
-                .appendCode("", "write-funcs new-function1 : new-action1 - Rewrites all the dynamic functions and actions in the file with new ones")
                 .appendCode("", "status <status> - Updates the status of the bot to the argument")
                 .appendCode("", "stop - Stops the bot, I can only be slain by the dank MCFrank")
 

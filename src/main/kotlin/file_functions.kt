@@ -1,3 +1,4 @@
+import java.io.File
 import java.io.FileReader
 import java.util.*
 import kotlin.text.split
@@ -9,27 +10,22 @@ import kotlin.text.trim
 class file_functions{
     val _FUN_FILENAME: String = "functions.txt"
     val max_size: Int = 20
-    var functions: Array<String> = Array<String>(max_size, {i -> ""})
-    var actions: Array<String> = Array<String>(max_size, {i -> ""})
+    var functions: Array<String> = Array(max_size, {i -> ""})
+    var actions: Array<String> = Array(max_size, {i -> ""})
 
 
     /* Get the functions from the file */
-    public fun getFunctions() {
-        var temp: Array<String> = Array<String>(max_size, {i -> ""})
+    fun getFunctions() {
+        var temp: Array<String> = Array(max_size, {i -> ""})
         var mainL: mainListener = mainListener()
 
-        var scanner: Scanner = Scanner(FileReader(_FUN_FILENAME))
-        var str: String?
-        var a: Int = 0
+        var file = File(_FUN_FILENAME)
+        var a = 0
 
-        loop@ for(a in 0..max_size-1) {
-            if(scanner.hasNext()) {
-                str = scanner.nextLine()
-                temp[a] = str
-            }
+        file.forEachLine {
+            temp[a] = it
+            ++a
         }
-
-        scanner.close()
 
         for(i in 0..max_size-1) {
             if(temp[i].length > 1) {
@@ -45,33 +41,31 @@ class file_functions{
             }
         }
 
-
-
     }
 
-    /* TODO: Write function(s) to the file */
-    public fun writeFunctions(newFunctions: Array<String>) {
+    /* Appends a function to functions.txt */
+    fun writeFunction(newVar: String) {
         getFunctions()
 
-        var nFunctions: Array<String> = Array<String> (max_size, {i -> ""} )
-        var nActions: Array<String> = Array<String> (max_size, {i -> ""} )
-        var nTemp: List<String>
+        var newFuncAct = newVar.split(':')
+        var function = newFuncAct[0].trim()
+        var action = newFuncAct[1].trim()
 
-        for(n in 0..newFunctions.size-1) {
-            nTemp = newFunctions[n].split(" : ")
-
-            nFunctions[n] = nTemp[0]
-            println("new function = ${nFunctions[n]}")
-            nActions[n] = nTemp[1]
-            println("new action = ${nActions[n]}")
-
+        for(a in 0..max_size-1) {
+            if(function == functions[a]) {
+                // Dunno what to do about function conflict yet
+            }
         }
 
+        var file = File(_FUN_FILENAME)
+        file.appendText("\r\n#$function : $action\r\n")
+
+        getFunctions()
 
     }
 
     /* TODO: check this works - editFunctions */
-    public fun editFunctions(newFunc: String, newAction: String) {
+    fun editFunctions(newFunc: String, newAction: String) {
         getFunctions()
         var tempFunctions: Array<String> = arrayOf<String>()
         var tempActions: Array<String> = arrayOf<String>()
@@ -83,17 +77,6 @@ class file_functions{
                 actions[i] = newAction
             }
         }
-    }
-
-    /* TODO: Figure out wtf I was doing with this */
-    public fun listFunctions() {
-
-        for(i in 0..max_size) {
-            if(functions[i].length > 0 && actions[i].length > 0) {
-                var temp: Array<String> = Array<String>(max_size, {i -> ""})
-            }
-        }
-
     }
 
 }
