@@ -213,16 +213,12 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
 
             // Reply with to a function in the file with the corresponding action
-            check@ for(i in 0..filefunc.max_size-1) {
-                //println("function = ${_functions[i]}")
-                if(_functions[i].length < 1){
-                    break@check
+            var a = 0
+            _functions.forEach {
+                if(msg.equals(it)) {
+                    message.reply(_actions[a])
                 }
-                else {
-                    if(msg.contains(_functions[i])) {
-                        message.reply(_actions[i])
-                    }
-                }
+                ++a
             }
         }
     }
