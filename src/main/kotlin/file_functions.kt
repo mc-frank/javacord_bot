@@ -58,7 +58,7 @@ class file_functions{
         }
 
         var file = File(_FUN_FILENAME)
-        file.appendText("\r\n#$function : $action\r\n")
+        file.appendText("$function : $action\n")
 
         getFunctions()
 

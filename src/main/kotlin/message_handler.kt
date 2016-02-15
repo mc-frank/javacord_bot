@@ -32,6 +32,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
     private val admins: Array<String> = arrayOf("vind", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
 
+    val prefix = "$"
+
     private val filefunc: file_functions = file_functions()
     var _functions: Array<String> = filefunc.functions
     var _actions: Array<String> = filefunc.actions
@@ -77,10 +79,10 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         *
         * */
         thread() {
-            if(msg.equals("#bot")) {
+            if(msg.equals("${prefix}bot")) {
                 postCommands(message)
             }
-            else if(msg.contains("#bot-sys")) {
+            else if(msg.contains("${prefix}bot-sys")) {
                 var runtime: Runtime = Runtime.getRuntime()
                 var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
                 var uptime = rb.uptime / 1000
@@ -88,7 +90,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 message.reply(details)
             }
 
-            else if(msg.startsWith("#filter")) {
+            else if(msg.startsWith("${prefix}filter")) {
                 var log: log = log()
 
                 var word: String = msg.substring(8, msg.length)
@@ -97,10 +99,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 var count = log.filterText(word)
                 message.reply("$word has been mentioned in $count messages")
             }
-            else if(msg.contains("#broadcast")) {
+            else if(msg.contains("${prefix}broadcast")) {
                 // TODO: This will allow a user to broadcast a message to all the channels they have permission to
                 var serverID: Server
                 serverID = api.getServerById("JJG")
+
 
                 var channels = serverID.channels
                 channels.forEach {
@@ -110,7 +113,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
             }
 
-            else if(msg.contains("#get-funcs")) {
+            else if(msg.contains("${prefix}get-funcs")) {
                 var function_count = 0
                 for(a in 0..filefunc.max_size-1) {
                     if(_functions[a].length != 0 && _actions[a].length != 0) {
@@ -127,17 +130,17 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
                 message.reply(reply_string)
             }
-            else if(msg.startsWith("#add-func")) {
+            else if(msg.startsWith("${prefix}add-func")) {
                 var newFunc = msg.substring(10, msg.length)
                 filefunc.writeFunction(newFunc)
             }
 
-            else if(msg.contains("#status")) {
+            else if(msg.contains("${prefix}status")) {
                 var word: String = msg.substring(8, msg.length)
                 word.trim()
                 api.game = word
             }
-            else if(msg.contains("#avatar")) {
+            else if(msg.contains("${prefix}avatar")) {
                 var word: String = msg.substring(8, msg.length).toLowerCase()
                 var filename: String = "pics/avatar-$word.jpg"
                 var reply: String = ""
@@ -180,14 +183,14 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
             }
 
-            else if(msg.contains("#daisy")) {
+            else if(msg.contains("${prefix}daisy")) {
                 var web = web()
                 thread() {
                     var link = web.getDaisyLink()
                     message.reply(link)
                 }
             }
-            else if(msg.startsWith("#/r/")){
+            else if(msg.startsWith("${prefix}/r/")){
                 var subredditName = msg.substring(4, msg.trim().length)
                 if(subredditName.contains(" ")) {
                     message.reply("Subreddit cannot have a space in it")
@@ -200,11 +203,26 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
             }
 
-            else if(msg.contains("#chuck") || msg.contains("#norris")) {
+            else if(msg.contains("${prefix}dump")) {
+                message.reply("This is gonna take a while - pls wait :3")
+                var size = Integer.MAX_VALUE
+                var channel_history = message.channelReceiver.getMessageHistory(size)
+                var channel_msg_history = channel_history.get()
+                var msgHistoryFile = File("msgHistoryFile.txt")
+                var file_text = ""
+                channel_msg_history.iterator().forEach {
+                    file_text += it.content + "\n"
+                }
+                msgHistoryFile.writeText(file_text)
+                message.channelReceiver.sendFile(msgHistoryFile)
+                msgHistoryFile.deleteOnExit()
+            }
+
+            else if(msg.contains("${prefix}chuck") || msg.contains("${prefix}norris")) {
                 var web = web()
                 message.reply(web.fetchJoke())
             }
-            else if(msg.contains("#stop")){
+            else if(msg.contains("${prefix}stop")){
                 admins.forEach {
                     if(user.equals(it)) {
                         System.exit(-1)
@@ -215,7 +233,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             // Reply with to a function in the file with the corresponding action
             var a = 0
             _functions.forEach {
-                if(msg.equals(it)) {
+                if(msg.equals("$prefix$it")) {
                     message.reply(_actions[a])
                 }
                 ++a
