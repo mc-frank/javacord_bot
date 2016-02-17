@@ -205,7 +205,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
             else if(msg.contains("${prefix}dump")) {
                 message.reply("This is gonna take a while - pls wait :3")
-                var size = Integer.MAX_VALUE
+                var size = 100000 //Integer.MAX_VALUE
                 var channel_history = message.channelReceiver.getMessageHistory(size)
                 var channel_msg_history = channel_history.get()
                 var msgHistoryFile = File("msgHistoryFile.txt")
@@ -270,8 +270,12 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
     }
 
     override fun onUserChangeName(api: DiscordAPI, user: User, oldName: String) {
+        var logText = "[User Changed Name] $oldName changed their name to ${user.name}"
+        println(logText)
         var log: log = log()
         log.setNewFileName(log._FILENAME)
+        log.setNewFileText(logText)
+        log.writeFile()
     }
 
     override fun onServerJoin(api: DiscordAPI, server: Server) {
@@ -279,11 +283,20 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
     }
 
     override fun onChannelChangeName(api: DiscordAPI, channel: Channel, oldName: String) {
-
+        var logText = "[Channel Name Change] $oldName channel's name changed to ${channel.name}"
+        println(logText)
+        var log = log()
+        log.setNewFileName(log._FILENAME)
+        log.setNewFileText(logText)
     }
 
     override fun onChannelChangeTopic(api: DiscordAPI, channel: Channel, oldTopic: String) {
-
+        var logText = "[Channel Changed Topic] ${channel.name}'s topic changed from $oldTopic to ${channel.topic}"
+        println(logText)
+        var log = log()
+        log.setNewFileName(log._FILENAME)
+        log.setNewFileText(logText)
+        log.writeFile()
     }
 
 

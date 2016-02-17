@@ -64,7 +64,7 @@ class file_functions{
 
     }
 
-    /* TODO: check this works - editFunctions */
+    /* TODO: rewrite this - editFunctions */
     fun editFunctions(newFunc: String, newAction: String) {
         getFunctions()
         var tempFunctions: Array<String> = arrayOf<String>()

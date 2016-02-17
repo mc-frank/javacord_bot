@@ -20,28 +20,24 @@ class web {
     fun fetchJoke(): String {
         var joke = "joke-null"
 
-        var result: StringBuilder = StringBuilder()
-
-        var url = URL("http://api.icndb.com/jokes/random")
-        var conn = url.openConnection() as HttpURLConnection
-        conn.requestMethod = "GET"
-        var rd = BufferedReader(InputStreamReader(conn.inputStream))
-
-        // how come I've never seen this fantastic shit before?
-        rd.forEachLine { result.append(it) }
-
-        var jsonObject = JSONParser().parse(result.toString()) as JSONObject
-        var valueObj = jsonObject.get("value") as JSONObject
-        var value = valueObj.get("joke")
-        joke = value as String
-
         try {
+            var result: StringBuilder = StringBuilder()
+            var url = URL("http://api.icndb.com/jokes/random")
+            var conn = url.openConnection() as HttpURLConnection
+            conn.requestMethod = "GET"
+            var rd = BufferedReader(InputStreamReader(conn.inputStream))
 
+            // how come I've never seen this fantastic shit before?
+            rd.forEachLine { result.append(it) }
+
+            var jsonObject = JSONParser().parse(result.toString()) as JSONObject
+            var valueObj = jsonObject.get("value") as JSONObject
+            var value = valueObj.get("joke")
+            joke = value as String
 
         } catch(ex: Exception) {
             println("Error in fetchJoke - ${ex.message}")
         }
-
 
         return joke;
     }
@@ -51,11 +47,15 @@ class web {
 
         var redditClient = getRedditClient()
 
-        var post = redditClient.getRandomSubmission("DaisyRidley")
-        var postTitle = post.title
-        var postLink = post.url
+        try {
+            var post = redditClient.getRandomSubmission("DaisyRidley")
+            var postTitle = post.title
+            var postLink = post.url
 
-        link = postTitle + " - " + postLink
+            link = postTitle + " - " + postLink
+        } catch (ex: Exception) {
+            link = "Error in getDaisyLink - ${ex.message}"
+        }
 
         return link
     }
@@ -76,7 +76,7 @@ class web {
                 if (post.selftext.length > 0) {
                     //Do nothing, it's got a bad link and so needs to find another.
                 } else {
-                    break;
+                    break
                 }
 
             }

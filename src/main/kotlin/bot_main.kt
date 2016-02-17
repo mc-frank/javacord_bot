@@ -4,6 +4,7 @@ import kotlin.text.split
 import kotlin.text.startsWith
 import de.btobastian.javacord.*
 import de.btobastian.javacord.entities.Channel
+import org.apache.http.concurrent.FutureCallback
 import kotlin.collections.forEach
 import kotlin.text.*
 
@@ -38,6 +39,7 @@ fun main(args: Array<String>) {
     */
 
     api.connectBlocking()
+    //api.connect(org.apache.http.concurrent.FutureCallback<api>)
     setupAPI(api)
 
 
@@ -53,12 +55,12 @@ fun main(args: Array<String>) {
             var msg = input.split("#msg ")
             generalChannel.sendMessage("${msg[1]}")
         }
-        else if(input.startsWith("#status")){
+        else if (input.startsWith("#status")){
             var word: String = input.substring(8, input.length)
             word.trim()
             api.game = word
         }
-        else if(input.startsWith("#id")) {
+        else if (input.startsWith("#id")) {
             var word: String = input.substring(4, input.length)
             word.trim()
 

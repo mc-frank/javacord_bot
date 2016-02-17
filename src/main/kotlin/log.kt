@@ -8,8 +8,8 @@ import kotlin.text.split
  * Created by unwin on 10/01/2016.
  */
 class log {
-    public val _FILENAME: String = "bot-log.txt"
-    public val _STATE_FILENAME: String = "status-log.txt"
+    val _FILENAME: String = "bot-log.txt"
+    val _STATE_FILENAME: String = "status-log.txt"
     var fileName: String = ""
     var text: String = ""
 
@@ -56,17 +56,15 @@ class log {
     /* Write the file */
     fun writeFile() {
         try{
-            var fWrite: FileWriter = FileWriter(fileName, true)
-            var pWrite: PrintWriter = PrintWriter(fWrite)
+            var file = File(fileName)
 
             var dateFormat: DateFormat = SimpleDateFormat("dd/MM/yy HH:mm:ss")
             var date: Date = Date()
 
-            pWrite.printf("%s --- " + dateFormat.format(date) + "%n",  text)
-
-            pWrite.close()
+            var fileText = "\r\n$text --- ${dateFormat.format(date)} \r\n"
+            file.appendText(fileText)
         } catch(ex: Exception) {
-            println("Some exception in writeFile fam, check it out --- ${ex.message}")
+            println("Some exception in writeFile --- ${ex.message}")
         }
     }
 
