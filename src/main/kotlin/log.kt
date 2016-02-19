@@ -27,9 +27,13 @@ class log {
             br.forEachLine {
                 strLine = it
                 var words = strLine.split(" ")
-                for(s: String in words) {
-                    if(s.equals(filterText)) {
-                        ++count
+                if(strLine.contains("JoodBot >")) {
+                    // Ignore counting the line if it's from JoodBot
+                } else {
+                    for(s: String in words) {
+                        if(s.contains(filterText)) {
+                            ++count
+                        }
                     }
                 }
             }

@@ -217,7 +217,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 message.channelReceiver.sendFile(msgHistoryFile)
                 msgHistoryFile.deleteOnExit()
             }
-
             else if(msg.contains("${prefix}chuck") || msg.contains("${prefix}norris")) {
                 var web = web()
                 message.reply(web.fetchJoke())

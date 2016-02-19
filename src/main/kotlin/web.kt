@@ -6,11 +6,13 @@ import net.dean.jraw.models.Submission
 
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
+import java.awt.image.BufferedImage
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import javax.imageio.ImageIO
 
 /**
  * Created by unwin on 06-Feb-16.
@@ -71,17 +73,11 @@ class web {
             if(subreddit.isNsfw){
                 //
             }
-            while (true) {
-                post = redditClient.getRandomSubmission(subredditName)
-                if (post.selftext.length > 0) {
-                    //Do nothing, it's got a bad link and so needs to find another.
-                } else {
-                    break
-                }
 
-            }
+            post = redditClient.getRandomSubmission(subredditName)
+
             link = post.title + " - " + post.url
-        } catch(ex: NetworkException) {
+        } catch(ex: Exception) {
             println("Error in randomSubredditPost - ${ex.message}")
             link = "Error in randomSubredditPost - ${ex.message}"
         }
@@ -91,7 +87,7 @@ class web {
 
 
     //JRAW Reddit Stuff
-    private fun getRedditClient(): RedditClient {
+    fun getRedditClient(): RedditClient {
         var userAgent = UserAgent.of("discord-bot", "com.unwin.discord-bot", "v2.0", "fcumbadass")
         var redditClient = RedditClient(userAgent)
 
