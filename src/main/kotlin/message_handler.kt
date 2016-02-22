@@ -18,7 +18,9 @@ import de.btobastian.javacord.listener.user.UserChangeNameListener
  import java.io.File
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
-import kotlin.collections.forEach
+ import java.nio.file.Files
+ import java.nio.file.Path
+ import kotlin.collections.forEach
 import kotlin.collections.toTypedArray
  import kotlin.concurrent.thread
  import kotlin.text.*
@@ -141,45 +143,74 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 api.game = word
             }
             else if(msg.contains("${prefix}avatar")) {
-                var word: String = msg.substring(8, msg.length).toLowerCase()
-                var filename: String = "pics/avatar-$word.jpg"
-                var reply: String = ""
 
-                var avatar: ByteArray
-                var file: File = File(filename)
+                try {
+                    println("avatar triggered")
+                    var pathName = "pics/"
+                    var path = File(pathName)
+                    var word: String = msg.substring(8, msg.length).toLowerCase().trim()
+                    var filename: String = "${pathName}avatar-$word.jpg"
+                    var reply: String = ""
 
-                var users: Array<User> = api.users.toTypedArray()
-
-                loop@ for (i in 0..users.size - 1) {
-                    var usr = users[i]
-                    if (word.contains(usr.name.toLowerCase())) {
-                        // Check if saved avatar is same as current one
-                        if (File(filename).exists()) {
-                            var savedAvatarBytes = File(filename).readBytes()
-                            // Checks if saved file is equal to current avatar
-                            if(savedAvatarBytes.equals(usr.avatarAsByteArray.get())) {
-                                // no change is needed
-                            } else {
-                                //saved file is different to current avatar and so new one needs to be downloaded
-                                file.delete()
-                                file.appendBytes(usr.avatarAsByteArray.get())
-                            }
-                        } else {
-                            var temp = usr.avatarAsByteArray
-                            avatar = temp.get()
-                            file.appendBytes(avatar)
-                        }
-                        reply = "$word's avatar:"
+                    // Check if the path exists or not - if not, create it
+                    if(path.isDirectory) {
+                        // Do nothing
+                    } else {
+                        path.mkdir()
                     }
-                }
 
-                if (file.length() < 1) {
-                    message.reply("Error: user doesn't exist, or no avatar")
-                } else if (reply.length == 0) {
-                    message.reply("User not found")
-                } else {
-                    message.reply(reply)
-                    message.channelReceiver.sendFile(file)
+                    // Crate some variables for the avatar (bytes), and the file (file)
+                    var avatar: ByteArray
+                    var file: File = File(filename)
+
+                    // Create an array of users in the server to loop through
+                    var users: Array<User> = api.users.toTypedArray()
+
+                    // Loop through the users and check if their name matches one provided by the user
+                    loop@ for (i in 0..users.size-1) {
+
+                        // Checks if the current user in the loop is equal to the one provided by the user
+                        if (word.contains(users[i].name.toLowerCase().trim())) {
+
+                            // Check if avatar exists
+                            if (File(filename).exists()) {
+
+                                var savedAvatarBytes = File(filename).readBytes()
+
+                                // Checks if saved file is equal to current avatar
+                                if(savedAvatarBytes.equals(users[i].avatarAsByteArray.get())) {
+                                    // no change is needed
+                                } else {
+                                    //saved file is different to current avatar and so new one needs to be downloaded
+                                    file.delete()
+                                    file.appendBytes(users[i].avatarAsByteArray.get())
+                                }
+                            } else {
+                                var temp = users[i].avatarAsByteArray
+                                avatar = temp.get()
+                                file.appendBytes(avatar)
+                            }
+
+                            // Add some text to be replied
+                            reply = "$word's avatar:"
+                        }
+                    }
+
+                    // Checks if the length of the file to be replied with it less than 1 byte (doesn't exist)
+                    if (file.length() < 1) {
+                        message.reply("Error: user doesn't exist, or no set avatar")
+                    }
+                    // Checks if the reply text is equal to 0
+                    else if (reply.length == 0) {
+                        message.reply("User not found")
+                    }
+                    // If everything works fine and the file is good
+                    else {
+                        message.reply(reply)
+                        message.channelReceiver.sendFile(file)
+                    }
+                } catch (ex: Exception) {
+                    message.reply("Error in avatar -- ${ex.message}")
                 }
             }
 

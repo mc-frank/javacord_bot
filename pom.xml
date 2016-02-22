@@ -7,7 +7,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>javacord_bot</artifactId>
-    <version>2.5.1</version>
+    <version>2.5.5</version>
 
 
     <build>
