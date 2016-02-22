@@ -31,7 +31,7 @@ class log {
                     // Ignore counting the line if it's from JoodBot
                 } else {
                     for(s: String in words) {
-                        if(s.contains(filterText)) {
+                        if(s.toLowerCase().contains(filterText)) {
                             ++count
                         }
                     }

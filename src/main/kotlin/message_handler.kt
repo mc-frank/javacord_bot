@@ -32,7 +32,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         MessageDeleteListener, UserChangeNameListener, ServerJoinListener, ChannelChangeNameListener, ChannelChangeTopicListener
 {
 
-    private val admins: Array<String> = arrayOf("vind", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
+    private val admins: Array<String> = arrayOf("vindaloo", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
 
     val prefix = "$"
 
@@ -96,7 +96,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 var log: log = log()
 
                 var word: String = msg.substring(8, msg.length)
-                word.trim()
+                word.toLowerCase().trim()
 
                 var count = log.filterText(word)
                 message.reply("$word has been mentioned in $count messages")
@@ -236,13 +236,13 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
             else if(msg.contains("${prefix}dump")) {
                 message.reply("This is gonna take a while - pls wait :3")
-                var size = 100000 //Integer.MAX_VALUE
+                var size = Integer.MAX_VALUE
                 var channel_history = message.channelReceiver.getMessageHistory(size)
                 var channel_msg_history = channel_history.get()
                 var msgHistoryFile = File("msgHistoryFile.txt")
                 var file_text = ""
                 channel_msg_history.iterator().forEach {
-                    file_text += it.content + "\n"
+                    file_text += "\r\n" + it.content + "\r\n"
                 }
                 msgHistoryFile.writeText(file_text)
                 message.channelReceiver.sendFile(msgHistoryFile)
