@@ -2,6 +2,6 @@ ping : PONG!
 racist : https://www.youtube.com/watch?v=1I0zG7-DPew
 ayy : http://i3.kym-cdn.com/photos/images/facebook/000/632/639/87c.gif
 lmao : https://static.fjcdn.com/comments/Ayy+lmao+_6e3ca3ea19becf3ca461c8ec5c01aa19.jpg
-meme : Dank memes for <user>
+meme : Dank memes for <user> <-- placeholder for now
 kebab : https://www.youtube.com/watch?v=2lzXpOF5Ssg
 jj : Jood Jame :)

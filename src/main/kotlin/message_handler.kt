@@ -1,29 +1,27 @@
- import de.btobastian.javacord.*
- import de.btobastian.javacord.entities.Channel
- import de.btobastian.javacord.entities.Server
- import de.btobastian.javacord.entities.User
- import de.btobastian.javacord.entities.message.Message
- import de.btobastian.javacord.entities.message.MessageBuilder
- import de.btobastian.javacord.listener.channel.ChannelChangeNameListener
+import com.google.code.chatterbotapi.ChatterBotFactory
+import com.google.code.chatterbotapi.ChatterBotSession
+import com.google.code.chatterbotapi.ChatterBotType
+import de.btobastian.javacord.*
+import de.btobastian.javacord.entities.Channel
+import de.btobastian.javacord.entities.Server
+import de.btobastian.javacord.entities.User
+import de.btobastian.javacord.entities.message.Message
+import de.btobastian.javacord.entities.message.MessageBuilder
+import de.btobastian.javacord.listener.channel.ChannelChangeNameListener
 import de.btobastian.javacord.listener.channel.ChannelChangeTopicListener
 import de.btobastian.javacord.listener.message.MessageCreateListener
 import de.btobastian.javacord.listener.message.MessageDeleteListener
 import de.btobastian.javacord.listener.message.MessageEditListener
 import de.btobastian.javacord.listener.message.TypingStartListener
 import de.btobastian.javacord.listener.server.ServerJoinListener
-import de.btobastian.javacord.listener.server.ServerMemberAddListener
-import de.btobastian.javacord.listener.server.ServerMemberRemoveListener
 import de.btobastian.javacord.listener.user.UserChangeNameListener
- import org.apache.http.concurrent.FutureCallback
- import java.io.File
+import java.io.File
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
- import java.nio.file.Files
- import java.nio.file.Path
- import kotlin.collections.forEach
+import kotlin.collections.forEach
 import kotlin.collections.toTypedArray
- import kotlin.concurrent.thread
- import kotlin.text.*
+import kotlin.concurrent.thread
+import kotlin.text.*
 
 /**
  * Created by unwin on 10/01/2016.
@@ -84,7 +82,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             if(msg.equals("${prefix}bot")) {
                 postCommands(message)
             }
-            else if(msg.contains("${prefix}bot-sys")) {
+            else if(msg.contains("${prefix}bot-sys") || msg.contains("${prefix}botsys")) {
                 var runtime: Runtime = Runtime.getRuntime()
                 var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
                 var uptime = rb.uptime / 1000
@@ -214,6 +212,22 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
             }
 
+            else if(msg.startsWith("${prefix}cb")) {
+                if( !(user.equals("MCFrank")) ) {
+                    message.reply("In testing")
+                } else {
+                    var factory = ChatterBotFactory()
+                    var bot1 = factory.create(ChatterBotType.CLEVERBOT)
+                    var bot2 = factory.create(ChatterBotType.CLEVERBOT)
+                    var bot1session = bot1.createSession()
+                    var bot2session = bot2.createSession()
+                    while(true) {
+                        message.reply("bot1> ${bot1session.think(msg)}")
+                        message.reply("bot2> ${bot2session.think(msg)}")
+                    }
+                }
+            }
+
             else if(msg.contains("${prefix}daisy")) {
                 var web = web()
                 thread() {
@@ -235,7 +249,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
 
             else if(msg.contains("${prefix}dump")) {
-                message.reply("This is gonna take a while - pls wait :3")
+                message.reply("This is gonna take a while - please wait")
+                message.reply("Please also note this file may not be organised, I am only getting the messages from Discord as they give them to me")
                 var size = Integer.MAX_VALUE
                 var channel_history = message.channelReceiver.getMessageHistory(size)
                 var channel_msg_history = channel_history.get()

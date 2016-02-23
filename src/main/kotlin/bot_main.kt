@@ -4,7 +4,6 @@ import kotlin.text.split
 import kotlin.text.startsWith
 import de.btobastian.javacord.*
 import de.btobastian.javacord.entities.Channel
-import org.apache.http.concurrent.FutureCallback
 import kotlin.collections.forEach
 import kotlin.text.*
 

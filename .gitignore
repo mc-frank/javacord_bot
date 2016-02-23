@@ -7,6 +7,7 @@ out/
 bot-log.txt
 pass.txt
 ids.txt
+msgHistoryFile.txt
 *.bat
 
 
