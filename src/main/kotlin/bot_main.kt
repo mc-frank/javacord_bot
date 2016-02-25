@@ -13,7 +13,6 @@ import kotlin.text.*
 fun main(args: Array<String>) {
     val api = Javacord.getApi()
 
-    var line: String
     var creds: List<String> = listOf()
     try {
         creds = File("pass.txt").readLines()
@@ -83,5 +82,6 @@ fun setupAPI(api: DiscordAPI) {
     filefunctions.getFunctions()
 
     api.registerListener(mainListener())
+    api.setAutoReconnect(true)
 }
 

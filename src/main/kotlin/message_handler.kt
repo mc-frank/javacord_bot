@@ -1,10 +1,8 @@
-import com.google.code.chatterbotapi.ChatterBotFactory
-import com.google.code.chatterbotapi.ChatterBotSession
-import com.google.code.chatterbotapi.ChatterBotType
 import de.btobastian.javacord.*
 import de.btobastian.javacord.entities.Channel
 import de.btobastian.javacord.entities.Server
 import de.btobastian.javacord.entities.User
+import de.btobastian.javacord.entities.permissions.Role
 import de.btobastian.javacord.entities.message.Message
 import de.btobastian.javacord.entities.message.MessageBuilder
 import de.btobastian.javacord.listener.channel.ChannelChangeNameListener
@@ -13,6 +11,8 @@ import de.btobastian.javacord.listener.message.MessageCreateListener
 import de.btobastian.javacord.listener.message.MessageDeleteListener
 import de.btobastian.javacord.listener.message.MessageEditListener
 import de.btobastian.javacord.listener.message.TypingStartListener
+import de.btobastian.javacord.listener.role.RoleCreateListener
+import de.btobastian.javacord.listener.server.ServerChangeNameListener
 import de.btobastian.javacord.listener.server.ServerJoinListener
 import de.btobastian.javacord.listener.user.UserChangeNameListener
 import java.io.File
@@ -27,7 +27,8 @@ import kotlin.text.*
  * Created by unwin on 10/01/2016.
  */
 class mainListener: MessageCreateListener, MessageEditListener, TypingStartListener,
-        MessageDeleteListener, UserChangeNameListener, ServerJoinListener, ChannelChangeNameListener, ChannelChangeTopicListener
+        MessageDeleteListener, UserChangeNameListener, ServerJoinListener, ChannelChangeNameListener,
+        ChannelChangeTopicListener, ServerChangeNameListener, RoleCreateListener
 {
 
     private val admins: Array<String> = arrayOf("vindaloo", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
@@ -86,7 +87,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 var runtime: Runtime = Runtime.getRuntime()
                 var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
                 var uptime = rb.uptime / 1000
-                var details: String = "CPU(s) -- " + runtime.availableProcessors() + "\nOS -- " + System.getProperty("os.name") + "\nFree memory to JVM -- " + runtime.freeMemory() / (1024*1024) + " MB \nUptime -- " + (uptime/60) + " minutes"
+                var details: String = "CPU(s) -- " + runtime.availableProcessors() +
+                        "\nOS -- " + System.getProperty("os.name") +
+                        "\nFree memory to JVM -- " + runtime.freeMemory() / (1024*1024) + " MB "
+                        "\nUptime -- " + (uptime/60) + " minutes " +
+                        "\nReconnect -- " + api.isAutoReconnectEnabled
                 message.reply(details)
             }
 
@@ -212,22 +217,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
             }
 
-            else if(msg.startsWith("${prefix}cb")) {
-                if( !(user.equals("MCFrank")) ) {
-                    message.reply("In testing")
-                } else {
-                    var factory = ChatterBotFactory()
-                    var bot1 = factory.create(ChatterBotType.CLEVERBOT)
-                    var bot2 = factory.create(ChatterBotType.CLEVERBOT)
-                    var bot1session = bot1.createSession()
-                    var bot2session = bot2.createSession()
-                    while(true) {
-                        message.reply("bot1> ${bot1session.think(msg)}")
-                        message.reply("bot2> ${bot2session.think(msg)}")
-                    }
-                }
-            }
-
             else if(msg.contains("${prefix}daisy")) {
                 var web = web()
                 thread() {
@@ -251,13 +240,13 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             else if(msg.contains("${prefix}dump")) {
                 message.reply("This is gonna take a while - please wait")
                 message.reply("Please also note this file may not be organised, I am only getting the messages from Discord as they give them to me")
-                var size = Integer.MAX_VALUE
+                var size = 10//Integer.MAX_VALUE
                 var channel_history = message.channelReceiver.getMessageHistory(size)
                 var channel_msg_history = channel_history.get()
                 var msgHistoryFile = File("msgHistoryFile.txt")
                 var file_text = ""
                 channel_msg_history.iterator().forEach {
-                    file_text += "\r\n" + it.content + "\r\n"
+                    file_text += it.content + "\r\n"
                 }
                 msgHistoryFile.writeText(file_text)
                 message.channelReceiver.sendFile(msgHistoryFile)
@@ -266,6 +255,10 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             else if(msg.contains("${prefix}chuck") || msg.contains("${prefix}norris")) {
                 var web = web()
                 message.reply(web.fetchJoke())
+            }
+
+            else if(msg.contains("${prefix}reconnect")) {
+                api.reconnectBlocking()
             }
             else if(msg.contains("${prefix}stop")){
                 admins.forEach {
@@ -344,6 +337,16 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         log.writeFile()
     }
 
+    override fun onServerChangeName(api: DiscordAPI, server: Server, name: String) {
+
+    }
+
+    override fun onRoleCreate(api: DiscordAPI, role: Role) {
+        var logText = "${role.name}"
+        var log = log()
+        log.setNewFileName(log._FILENAME)
+        log.setNewFileText("")
+    }
 
     //
 

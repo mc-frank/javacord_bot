@@ -65,7 +65,7 @@ class log {
             var dateFormat: DateFormat = SimpleDateFormat("dd/MM/yy HH:mm:ss")
             var date: Date = Date()
 
-            var fileText = "\r\n$text --- ${dateFormat.format(date)} \r\n"
+            var fileText = "$text --- ${dateFormat.format(date)} \r\n"
             file.appendText(fileText)
         } catch(ex: Exception) {
             println("Some exception in writeFile --- ${ex.message}")
