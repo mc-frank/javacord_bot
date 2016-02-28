@@ -83,15 +83,15 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             if(msg.equals("${prefix}bot")) {
                 postCommands(message)
             }
-            else if(msg.contains("${prefix}bot-sys") || msg.contains("${prefix}botsys")) {
+            else if(msg.contains("${prefix}bot-sys") || msg.contains("${prefix}botsys") || msg.contains("${prefix}info")) {
                 var runtime: Runtime = Runtime.getRuntime()
                 var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
                 var uptime = rb.uptime / 1000
                 var details: String = "CPU(s) -- " + runtime.availableProcessors() +
                         "\nOS -- " + System.getProperty("os.name") +
-                        "\nFree memory to JVM -- " + runtime.freeMemory() / (1024*1024) + " MB "
-                        "\nUptime -- " + (uptime/60) + " minutes " +
-                        "\nReconnect -- " + api.isAutoReconnectEnabled
+                        "\nFree memory to JVM -- " + runtime.freeMemory() / (1024*1024) + " MB " +
+                        "\nUptime -- " + (uptime/60) + " minutes (" + uptime/60/60 + " hours)" +
+                        "\nReconnect enabled -- " + api.isAutoReconnectEnabled
                 message.reply(details)
             }
 
@@ -148,7 +148,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             else if(msg.contains("${prefix}avatar")) {
 
                 try {
-                    println("avatar triggered")
                     var pathName = "pics/"
                     var path = File(pathName)
                     var word: String = msg.substring(8, msg.length).toLowerCase().trim()
@@ -176,18 +175,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                         if (word.contains(users[i].name.toLowerCase().trim())) {
 
                             // Check if avatar exists
-                            if (File(filename).exists()) {
-
-                                var savedAvatarBytes = File(filename).readBytes()
-
-                                // Checks if saved file is equal to current avatar
-                                if(savedAvatarBytes.equals(users[i].avatarAsByteArray.get())) {
-                                    // no change is needed
-                                } else {
-                                    //saved file is different to current avatar and so new one needs to be downloaded
-                                    file.delete()
-                                    file.appendBytes(users[i].avatarAsByteArray.get())
-                                }
+                            if (file.exists()) {
+                                file.delete()
+                                var temp = users[i].avatarAsByteArray
+                                avatar = temp.get()
+                                file.writeBytes(avatar)
                             } else {
                                 var temp = users[i].avatarAsByteArray
                                 avatar = temp.get()
@@ -361,8 +353,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 .appendCode("", "/r/<subreddit> - Posts a random link from <subreddit>")
                 .appendCode("", "Daisy - Posts a random link from /r/DaisyRidley")
                 .appendCode("", "Chuck or Norris - Posts a random Chuck Norris joke")
-                .append("Admin/Moderator only:\n")
                 .appendCode("", "status <status> - Updates the status of the bot to the argument")
+                .append("Admin/Moderator only:\n")
                 .appendCode("", "stop - Stops the bot, I can only be slain by the dank MCFrank")
 
                 .build())
