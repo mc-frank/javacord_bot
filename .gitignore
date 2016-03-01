@@ -4,6 +4,7 @@
 target/
 pics/
 out/
+lib/
 bot-log.txt
 pass.txt
 ids.txt

@@ -1,18 +1,15 @@
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.UserAgent
 import net.dean.jraw.http.oauth.Credentials
 import net.dean.jraw.models.Submission
 
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
-import java.awt.image.BufferedImage
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import javax.imageio.ImageIO
 
 /**
  * Created by unwin on 06-Feb-16.

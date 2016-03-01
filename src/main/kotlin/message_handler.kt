@@ -45,7 +45,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         var log: log = log()
         log.setNewFileName(log._FILENAME)
 
-        var msg: String = message.content
+        var msg: String = message.content.toLowerCase()
         var user: String = message.author.name
         var channel: String? = message.channelReceiver.name
 
@@ -146,7 +146,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 api.game = word
             }
             else if(msg.contains("${prefix}avatar")) {
-
                 try {
                     var pathName = "pics/"
                     var path = File(pathName)
@@ -209,6 +208,23 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
             }
 
+            else if(msg.contains("${prefix}temp")) {
+                if(!message.author.id.equals("90548142981808128")) {
+                    message.reply("MCFrank only pls :3")
+                } else {
+                    var temp = raspi_stuff().fetchData("temp")
+                    message.reply(temp)
+                }
+            }
+            else if(msg.contains("${prefix}hum")) {
+                if(!message.author.id.equals("90548142981808128")) {
+                    message.reply("MCFrank only pls :3")
+                } else {
+                    var temp = raspi_stuff().fetchData("hum")
+                    message.reply(temp)
+                }
+            }
+
             else if(msg.contains("${prefix}daisy")) {
                 var web = web()
                 thread() {
@@ -230,6 +246,9 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
 
             else if(msg.contains("${prefix}dump")) {
+                var file = File("bot-log.txt")
+                message.channelReceiver.sendFile(file)
+                /*
                 message.reply("This is gonna take a while - please wait")
                 message.reply("Please also note this file may not be organised, I am only getting the messages from Discord as they give them to me")
                 var size = 10//Integer.MAX_VALUE
@@ -243,6 +262,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 msgHistoryFile.writeText(file_text)
                 message.channelReceiver.sendFile(msgHistoryFile)
                 msgHistoryFile.deleteOnExit()
+                */
             }
             else if(msg.contains("${prefix}chuck") || msg.contains("${prefix}norris")) {
                 var web = web()
