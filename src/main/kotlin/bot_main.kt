@@ -11,17 +11,15 @@ import com.google.common.util.concurrent.FutureCallback
  * Created by unwin on 10/01/2016.
  */
 fun main(args: Array<String>) {
+    var jReader = jsonReader()
+    jReader.readJsonConfig()
+    var email = jReader.getEmailFromConfig()
+    var pass = jReader.getPasswordFromConfig()
+
     val api = Javacord.getApi()
 
-    var creds: List<String> = listOf()
-    try {
-        creds = File("pass.txt").readLines()
-    } catch (ex: Exception) {
-        // File not found or something.
-    }
-
-    api.setEmail(creds[0])
-    api.setPassword(creds[1])
+    api.setEmail(email)
+    api.setPassword(pass)
 
     api.connect(object: FutureCallback<DiscordAPI> {
         override fun onSuccess(api: DiscordAPI?) {
@@ -39,19 +37,18 @@ fun main(args: Array<String>) {
 fun setupAPI(api: DiscordAPI?) {
     api?.game = "SPYING ON YOU >:)"
 
-    var filefunctions: file_functions = file_functions()
-    filefunctions.getFunctions()
-
     api?.registerListener(mainListener())
     api?.setAutoReconnect(true)
 
     // Do console based commands
     var mainListener = mainListener()
     var prefix = mainListener.prefix
+
     while (true) {
+
         println("Commands ready: ")
-        // Gonna make some command line arguments available to be used with the bot
         var input = readLine()
+
         if (input!!.startsWith("${prefix}msg", true)) {
             var channels = api?.getServerById("90542226181988352")?.channels
             var generalElement = 0
@@ -77,9 +74,13 @@ fun setupAPI(api: DiscordAPI?) {
                 file.delete()
             }
             var users = api?.users
+            var jReader = jsonReader()
+            jReader.writeUsersToConfig(users)
+            var file_text = ""
             users?.forEach {
                 println("${it.name} - (${it.id})")
                 file.appendText("${it.name} - (${it.id})\r\n")
+                file_text += "${it.name} - ${it.id}\r\n"
             }
 
         }
@@ -93,5 +94,6 @@ fun setupAPI(api: DiscordAPI?) {
             }
             api?.acceptInvite(invite)
         }
+
     }
 }

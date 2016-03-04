@@ -31,17 +31,15 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         ChannelChangeTopicListener, ServerChangeNameListener, RoleCreateListener
 {
 
-    private val admins: Array<String> = arrayOf("vindaloo", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
+    private val admins: Array<String> = arrayOf("vind", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
 
     val prefix = "$"
 
-    private val filefunc: file_functions = file_functions()
-    var _functions: Array<String> = filefunc.functions
-    var _actions: Array<String> = filefunc.actions
-
 
     override fun onMessageCreate(api: DiscordAPI, message: Message) {
-        filefunc.getFunctions()
+        var jReader = jsonReader()
+        jReader.readJsonConfig()
+
         var log: log = log()
         log.setNewFileName(log._FILENAME)
 
@@ -120,6 +118,24 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
             else if(msg.contains("${prefix}get-funcs")) {
                 var function_count = 0
+                var temp = ""
+
+                for(a in 0..jReader.functions.size-1) {
+                    if(jReader.functions[a].length < 1) {
+
+                    } else {
+                        temp += jReader.functions[a] + "\n"
+                        ++function_count
+                    }
+                }
+                if(temp.length < 1) {
+                    message.reply("There was an error getting the functions")
+                } else {
+                    message.reply("There are $function_count functions in the file: \n$temp")
+                }
+
+                /*
+                var function_count = 0
                 for(a in 0..filefunc.max_size-1) {
                     if(_functions[a].length != 0 && _actions[a].length != 0) {
                         ++function_count
@@ -134,10 +150,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                     reply_string += "$it\n"
                 }
                 message.reply(reply_string)
+                */
             }
             else if(msg.startsWith("${prefix}add-func")) {
                 var newFunc = msg.substring(10, msg.length)
-                filefunc.writeFunction(newFunc)
+                jReader.writeFunctionsToConfig(newFunc)
             }
 
             else if(msg.contains("${prefix}status")) {
@@ -282,9 +299,9 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
             // Reply with to a function in the file with the corresponding action
             var a = 0
-            _functions.forEach {
+            jReader.functions.forEach {
                 if(msg.equals("$prefix$it")) {
-                    message.reply(_actions[a])
+                    message.reply(jReader.actions[a])
                 }
                 ++a
             }

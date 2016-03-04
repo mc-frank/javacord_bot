@@ -52,8 +52,9 @@ class web {
             var postLink = post.url
 
             link = postTitle + " - " + postLink
+
         } catch (ex: Exception) {
-            link = "Error in getDaisyLink - ${ex.message}"
+            link = "Error in getDaisyLink -- ${ex.message}"
         }
 
         return link
@@ -85,17 +86,13 @@ class web {
 
     //JRAW Reddit Stuff
     fun getRedditClient(): RedditClient {
-        var userAgent = UserAgent.of("discord-bot", "com.unwin.discord-bot", "v2.0", "fcumbadass")
+        var userAgent = UserAgent.of("discord-bot", "com.unwin.discord-bot", "v3.0", "fcumbadass")
         var redditClient = RedditClient(userAgent)
 
-        var creds: List<String> = listOf()
-        try {
-            creds = File("pass.txt").readLines()
-        } catch (ex: Exception) {
-            println("Error in getRedditClient - ${ex.message}")
-        }
+        var jReader = jsonReader()
+        jReader.readJsonConfig()
 
-        var credentials = Credentials.script(creds[2], creds[3], creds[4], creds[5])
+        var credentials = Credentials.script(jReader.r_username, jReader.r_password, jReader.r_client_id, jReader.r_client_secret)
         var authData = redditClient.oAuthHelper.easyAuth(credentials)
         redditClient.authenticate(authData)
 

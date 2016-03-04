@@ -23,10 +23,12 @@ class raspi_stuff {
     fun fetchData(data: String): String {
         var temp = "temp-null"
         var humidity = "humidity-null"
+        var jReader = jsonReader()
+        jReader.readJsonConfig()
 
         try {
             var result: StringBuilder = StringBuilder()
-            var url = URL("http://192.168.0.41/dist")
+            var url = URL(jReader.raspi_addr)
             var conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "GET"
             var rd = BufferedReader(InputStreamReader(conn.inputStream))
@@ -50,6 +52,7 @@ class raspi_stuff {
         } else if (data.equals("hum")){
             return humidity
         }
-        return "idk man"
+        return "Raspberry Pi Connection Error :("
     }
+
 }

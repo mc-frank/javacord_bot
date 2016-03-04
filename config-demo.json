@@ -1,0 +1,23 @@
+{
+  "api": {
+    "email": "EMAIL HERE",
+    "password": "PASSWORD HERE"
+  },
+  "functions": {
+    "FUNCTION-TRIGGER": "ACTION"
+  },
+  "reddit": {
+    "username": "REDDIT USERNAME HERE",
+    "password": "REDDIT PASSWORD HERE",
+    "client_id": "REDDIT CLIENT ID HERE",
+    "client_secret": "REDDIT CLIENT SECRET"
+  },
+  "exp": {
+    "raspi-addr": "LEAVE BLANK - THIS IS DEBUG STUFF"
+  },
+  "users": {
+    "USER": "ID",
+    "_COMMENT": "THIS USER ARRAY WILL BE FILLED ON CALL OF THE ID COMMAND"
+  }
+
+}
