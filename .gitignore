@@ -2,15 +2,11 @@
 
 .idea/
 target/
-pics/
+pics-temp/
 out/
 lib/
 bot-log.txt
-pass.txt
-ids.txt
-msgHistoryFile.txt
 config.json
-*.bat
 
 
 # Windows image file caches

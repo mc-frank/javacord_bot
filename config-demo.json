@@ -1,7 +1,8 @@
 {
   "api": {
     "email": "EMAIL HERE",
-    "password": "PASSWORD HERE"
+    "password": "PASSWORD HERE",
+    "status": "DEFAULT STATUS OF BOT"
   },
   "functions": {
     "FUNCTION-TRIGGER": "ACTION"

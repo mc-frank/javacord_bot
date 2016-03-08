@@ -1,5 +1,4 @@
 import java.io.File
-import kotlin.collections.listOf
 import kotlin.text.split
 import kotlin.text.startsWith
 import de.btobastian.javacord.*
@@ -11,7 +10,7 @@ import com.google.common.util.concurrent.FutureCallback
  * Created by unwin on 10/01/2016.
  */
 fun main(args: Array<String>) {
-    var jReader = jsonReader()
+    var jReader = json_reader()
     jReader.readJsonConfig()
     var email = jReader.getEmailFromConfig()
     var pass = jReader.getPasswordFromConfig()
@@ -24,21 +23,22 @@ fun main(args: Array<String>) {
     api.connect(object: FutureCallback<DiscordAPI> {
         override fun onSuccess(api: DiscordAPI?) {
             println("Connect to Discord as ${api?.yourself?.name}/(@${api?.yourself?.id})")
-            setupAPI(api)
+            setupAPI(api, jReader)
         }
 
         override fun onFailure(t: Throwable) {
-            println("Unable to connect to Discord Servers :(")
+            println("Unable to connect to Discord Servers :( -- ${t.message}")
         }
     })
 }
 
 // Run when the api gets a connection to the server
-fun setupAPI(api: DiscordAPI?) {
-    api?.game = "SPYING ON YOU >:)"
+fun setupAPI(n_api: DiscordAPI?, jReader: json_reader) {
+    var api = n_api as DiscordAPI
 
-    api?.registerListener(mainListener())
-    api?.setAutoReconnect(true)
+    api.game = jReader.status
+    api.registerListener(mainListener())
+    api.setAutoReconnect(true)
 
     // Do console based commands
     var mainListener = mainListener()
@@ -50,7 +50,7 @@ fun setupAPI(api: DiscordAPI?) {
         var input = readLine()
 
         if (input!!.startsWith("${prefix}msg", true)) {
-            var channels = api?.getServerById("90542226181988352")?.channels
+            var channels = api.getServerById("90542226181988352")?.channels
             var generalElement = 0
             for(a in 0..(channels?.size)!!.minus(1)) {
                 if(channels?.elementAt(a)?.name.equals("developer")) {
@@ -65,7 +65,7 @@ fun setupAPI(api: DiscordAPI?) {
         else if (input.startsWith("${prefix}status")){
             var word: String = input.substring(8, input.length)
             word.trim()
-            api?.game = word
+            api.game = word
         }
         else if (input.startsWith("${prefix}id")) {
 
@@ -73,8 +73,7 @@ fun setupAPI(api: DiscordAPI?) {
             if(file.exists()) {
                 file.delete()
             }
-            var users = api?.users
-            var jReader = jsonReader()
+            var users = api.users
             jReader.writeUsersToConfig(users)
             var file_text = ""
             users?.forEach {
@@ -92,7 +91,18 @@ fun setupAPI(api: DiscordAPI?) {
             if(invite.length == 0) {
                 println("No invite specified.")
             }
-            api?.acceptInvite(invite)
+            api.acceptInvite(invite)
+        }
+        else if (input.startsWith("${prefix}reconnect")) {
+            api.reconnect(object: FutureCallback<DiscordAPI> {
+                override fun onSuccess(api: DiscordAPI?) {
+                    println("Reconnected")
+                    setupAPI(api, jReader)
+                }
+                override fun onFailure(t: Throwable) {
+                    println("Reconnect failed :(")
+                }
+            })
         }
 
     }

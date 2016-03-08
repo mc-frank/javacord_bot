@@ -89,7 +89,7 @@ class web {
         var userAgent = UserAgent.of("discord-bot", "com.unwin.discord-bot", "v3.0", "fcumbadass")
         var redditClient = RedditClient(userAgent)
 
-        var jReader = jsonReader()
+        var jReader = json_reader()
         jReader.readJsonConfig()
 
         var credentials = Credentials.script(jReader.r_username, jReader.r_password, jReader.r_client_id, jReader.r_client_secret)

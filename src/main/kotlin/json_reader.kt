@@ -7,13 +7,14 @@ import org.json.simple.parser.JSONParser
 /**
  * Created by unwin on 01-Mar-16.
  */
-class jsonReader {
+class json_reader {
 
     val file_name = "config.json"
     var config_file = File(file_name)
 
     var email: String = ""
     var password: String = ""
+    var status: String = ""
 
     var maxsize: Int = 50
 
@@ -23,10 +24,10 @@ class jsonReader {
     var usernames = Array(100, {i -> ""})
     var ids = Array(100, {i -> ""})
 
-    var r_username = ""
-    var r_password = ""
-    var r_client_id = ""
-    var r_client_secret = ""
+    var r_username: String = ""
+    var r_password: String = ""
+    var r_client_id: String = ""
+    var r_client_secret: String = ""
 
     //
     //
@@ -50,6 +51,7 @@ class jsonReader {
             // Credentials objects
             email = a_obj.get("email") as String
             password = a_obj.get("password") as String
+            status = a_obj.get("status") as String
 
             // Functions and actions objects
             var f_temp = f_obj.entries
@@ -90,7 +92,21 @@ class jsonReader {
         return password
     }
 
-    //data class RedditCreds(var username: String, var password: String, var client_id: String, var client_secret: String)
+    fun getUserIDFromConfig(username: String): String {
+        var r_id = "r_id null"
+
+        try {
+            for(a in 0..usernames.size-1) {
+                if(username.equals(usernames[a])) {
+                    r_id = ids[a]
+                }
+            }
+        } catch (ex: Exception) {
+            println("Error in getUserIDFromConfig -- ${ex.message}")
+        }
+
+        return r_id
+    }
 
     fun writeUsersToConfig(m_users: Collection<User>?) {
 

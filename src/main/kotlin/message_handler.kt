@@ -1,3 +1,4 @@
+import com.google.common.util.concurrent.FutureCallback
 import de.btobastian.javacord.*
 import de.btobastian.javacord.entities.Channel
 import de.btobastian.javacord.entities.Server
@@ -37,7 +38,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
 
     override fun onMessageCreate(api: DiscordAPI, message: Message) {
-        var jReader = jsonReader()
+        var jReader = json_reader()
         jReader.readJsonConfig()
 
         var log: log = log()
@@ -158,21 +159,23 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
 
             else if(msg.contains("${prefix}status")) {
-                var word: String = msg.substring(8, msg.length)
-                word.trim()
+                // Get the argument after the command and trim it rid of whitespaces
+                var word: String = msg.substring(8, msg.length).trim()
+
+                // Set the api's game to the argument
                 api.game = word
             }
             else if(msg.contains("${prefix}avatar")) {
+                var pathName = "pics-temp/"
+                var path = File(pathName)
+                var word: String = msg.substring(8, msg.length).toLowerCase().trim()
+                var filename: String = "${pathName}avatar-$word.jpg"
+                var reply: String = ""
                 try {
-                    var pathName = "pics/"
-                    var path = File(pathName)
-                    var word: String = msg.substring(8, msg.length).toLowerCase().trim()
-                    var filename: String = "${pathName}avatar-$word.jpg"
-                    var reply: String = ""
 
                     // Check if the path exists or not - if not, create it
                     if(path.isDirectory) {
-                        // Do nothing
+                        // Do nothing, dir exists
                     } else {
                         path.mkdir()
                     }
@@ -185,22 +188,15 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                     var users: Array<User> = api.users.toTypedArray()
 
                     // Loop through the users and check if their name matches one provided by the user
-                    loop@ for (i in 0..users.size-1) {
+                    for (i in 0..users.size-1) {
 
                         // Checks if the current user in the loop is equal to the one provided by the user
-                        if (word.contains(users[i].name.toLowerCase().trim())) {
+                        if (word.equals(users[i].name.toLowerCase())) {
 
-                            // Check if avatar exists
-                            if (file.exists()) {
-                                file.delete()
-                                var temp = users[i].avatarAsByteArray
-                                avatar = temp.get()
-                                file.writeBytes(avatar)
-                            } else {
-                                var temp = users[i].avatarAsByteArray
-                                avatar = temp.get()
-                                file.appendBytes(avatar)
-                            }
+                            file.delete()
+                            var temp = users[i].avatarAsByteArray
+                            avatar = temp.get()
+                            file.writeBytes(avatar)
 
                             // Add some text to be replied
                             reply = "$word's avatar:"
@@ -209,7 +205,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
                     // Checks if the length of the file to be replied with it less than 1 byte (doesn't exist)
                     if (file.length() < 1) {
-                        message.reply("Error: user doesn't exist, or no set avatar")
+                        message.reply("Error: user has no set avatar")
                     }
                     // Checks if the reply text is equal to 0
                     else if (reply.length == 0) {
@@ -218,7 +214,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                     // If everything works fine and the file is good
                     else {
                         message.reply(reply)
-                        message.channelReceiver.sendFile(file)
+                        var future_msg = message.channelReceiver.sendFile(file)
+                        future_msg.get()
+                        if(future_msg.isDone) {
+                            file.delete()
+                        }
                     }
                 } catch (ex: Exception) {
                     message.reply("Error in avatar -- ${ex.message}")
@@ -287,7 +287,15 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
 
             else if(msg.contains("${prefix}reconnect")) {
-                api.reconnectBlocking()
+                api.reconnect(object: FutureCallback<DiscordAPI> {
+                    override fun onSuccess(api: DiscordAPI?) {
+                        println("Reconnected")
+                        setupAPI(api, jReader)
+                    }
+                    override fun onFailure(t: Throwable) {
+                        println("Reconnect failed :(")
+                    }
+                })
             }
             else if(msg.contains("${prefix}stop")){
                 admins.forEach {
@@ -371,10 +379,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
     }
 
     override fun onRoleCreate(api: DiscordAPI, role: Role) {
-        var logText = "${role.name}"
+        var logText = "${role.name} created"
         var log = log()
         log.setNewFileName(log._FILENAME)
-        log.setNewFileText("")
+        log.setNewFileText(logText)
+        log.writeFile()
     }
 
     //
