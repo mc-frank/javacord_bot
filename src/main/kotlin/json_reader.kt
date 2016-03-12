@@ -54,14 +54,19 @@ class json_reader {
             status = a_obj.get("status") as String
 
             // Functions and actions objects
-            var f_temp = f_obj.entries
-            for(a in 0..f_temp.indices.last) {
-                var t_temp = f_temp.elementAt(a).toString().split("=")
+            var f_keys = f_obj.keys
+            var f_values = f_obj.values
+            var count = 0
 
-                functions[a] = t_temp[0]
-                actions[a] = t_temp[1]
+            f_keys.forEach {
+                functions[count++] = it as String
             }
 
+            count = 0
+
+            f_values.forEach {
+                actions[count++] = it as String
+            }
             // Users and ids objects
             var u_temp = u_obj.entries
             for(a in 0..u_temp.indices.last) {
@@ -143,7 +148,7 @@ class json_reader {
 
         try {
 
-            var newFuncAct = newVar.split(';')
+            var newFuncAct = newVar.split('\\')
             var function = newFuncAct[0].trim()
             var action = newFuncAct[1].trim()
 
@@ -167,6 +172,8 @@ class json_reader {
         } catch (ex: Exception) {
             println("Error in writeFunctionsToConfig -- ${ex.message}")
         }
+        
+        readJsonConfig()
 
     }
 }

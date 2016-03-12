@@ -32,8 +32,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         ChannelChangeTopicListener, ServerChangeNameListener, RoleCreateListener
 {
 
-    private val admins: Array<String> = arrayOf("vind", "mongzords", "Lucentconor", "MCFrank", "Trikzbowii")
-
     val prefix = "$"
 
     override fun onMessageCreate(api: DiscordAPI, message: Message) {
@@ -90,7 +88,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             if(msg.equals("${prefix}bot")) {
                 postCommands(message)
             }
-            else if(msg.contains("${prefix}bot-sys") || msg.contains("${prefix}botsys") || msg.contains("${prefix}info")) {
+            else if(msg.contains("${prefix}info")) {
                 var runtime: Runtime = Runtime.getRuntime()
                 var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
                 var uptime = rb.uptime / 1000
@@ -103,7 +101,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
 
             else if(msg.startsWith("${prefix}filter")) {
-                var log: log = log()
 
                 var word: String = msg.substring(8, msg.length)
                 word.toLowerCase().trim()
@@ -222,7 +219,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                     // If everything works fine and the file is good
                     else {
                         message.reply(reply)
-                        var future_msg = message.channelReceiver.sendFile(file)
+                        var future_msg = message.replyFile(file)
                         future_msg.get()
                         if(future_msg.isDone) {
                             file.delete()
@@ -306,10 +303,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 })
             }
             else if(msg.contains("${prefix}stop")){
-                admins.forEach {
-                    if(user.equals(it)) {
-                        System.exit(-1)
-                    }
+                if(user.equals("MCFrank")) {
+                    System.exit(-1)
                 }
             }
 
@@ -403,7 +398,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 .append("My functions are (everyone):\n")
                 .appendCode("", "filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord bot-log.txt")
                 .appendCode("", "get-funcs - Retrieves list of dynamic functions in the file currently")
-                .appendCode("", "add-func new-function1 : new-action1 - Adds a function to the functions file")
+                .appendCode("", "add-func new-function1 \\ new-action1 - Adds a function to the functions file")
                 .appendCode("", "avatar <user> - Posts the image of the user specified, currently must be the exact name of the user\n")
                 .appendCode("", "/r/<subreddit> - Posts a random link from <subreddit>")
                 .appendCode("", "Daisy - Posts a random link from /r/DaisyRidley")
