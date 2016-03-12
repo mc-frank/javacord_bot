@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
 
     api.connect(object: FutureCallback<DiscordAPI> {
         override fun onSuccess(api: DiscordAPI?) {
-            println("Connect to Discord as ${api?.yourself?.name}/(@${api?.yourself?.id})")
+            println("Connect to Discord as ${api?.yourself?.name}/(@${api?.yourself?.id}). Token = ${api?.token}")
             setupAPI(api, jReader)
         }
 

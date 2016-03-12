@@ -5,6 +5,9 @@ target/
 pics-temp/
 out/
 lib/
+
+messages/
+
 bot-log.txt
 config.json
 

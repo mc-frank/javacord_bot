@@ -143,7 +143,7 @@ class json_reader {
 
         try {
 
-            var newFuncAct = newVar.split(':')
+            var newFuncAct = newVar.split(';')
             var function = newFuncAct[0].trim()
             var action = newFuncAct[1].trim()
 

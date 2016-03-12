@@ -36,17 +36,24 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
     val prefix = "$"
 
-
     override fun onMessageCreate(api: DiscordAPI, message: Message) {
-        var jReader = json_reader()
-        jReader.readJsonConfig()
 
-        var log: log = log()
-        log.setNewFileName(log._FILENAME)
-
+        //Get local variables from the message
         var msg: String = message.content.toLowerCase()
         var user: String = message.author.name
         var channel: String? = message.channelReceiver.name
+
+        //Read config information from the .json file
+        var jReader = json_reader()
+        jReader.readJsonConfig()
+
+        //Create an instance of a log file
+        var log: log = log()
+        log.setNewFileName(log._FILENAME)
+        var logText = "[$channel] $user > $msg"
+
+        //Print out the message
+        println(logText)
 
         // Ignore if the message is a private message
         if(message.isPrivateMessage) {
@@ -56,8 +63,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             return
         }
 
-        println("[$channel] $user > $msg")
-        log.setNewFileText( ("[$channel] $user > $msg") )
+        //Only print to file and to console if message isn't a PM
+        log.setNewFileText( logText )
         log.writeFile()
 
 
@@ -66,9 +73,10 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             return
         }
 
-        // Respond to BotBT's penis functions
+
+        // Respond to BotBT's penis functions -- DONE
         if(user.equals("BotBT")) {
-            if(msg.contains("8") && msg.contains("=")) {
+            if(msg.contains("8") && msg.contains("=") && msg.contains("D")) {
                 message.reply("( ͡° ͜ʖ ͡°)")
             }
         }
@@ -153,7 +161,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 message.reply(reply_string)
                 */
             }
-            else if(msg.startsWith("${prefix}add-func")) {
+            else if(msg.startsWith("${prefix}add-funcs")) {
                 var newFunc = msg.substring(10, msg.length)
                 jReader.writeFunctionsToConfig(newFunc)
             }
@@ -313,6 +321,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
                 ++a
             }
+
         }
     }
 

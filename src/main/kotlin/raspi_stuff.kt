@@ -23,7 +23,7 @@ class raspi_stuff {
     fun fetchData(data: String): String {
         var temp = "temp-null"
         var humidity = "humidity-null"
-        var jReader = jsonReader()
+        var jReader = json_reader()
         jReader.readJsonConfig()
 
         try {
