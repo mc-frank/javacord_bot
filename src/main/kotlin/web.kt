@@ -90,7 +90,7 @@ class web {
         var redditClient = RedditClient(userAgent)
 
         var jReader = json_reader()
-        jReader.readJsonConfig()
+        jReader.read_json_config()
 
         var credentials = Credentials.script(jReader.r_username, jReader.r_password, jReader.r_client_id, jReader.r_client_secret)
         var authData = redditClient.oAuthHelper.easyAuth(credentials)

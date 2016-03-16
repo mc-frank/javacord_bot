@@ -24,7 +24,7 @@ class raspi_stuff {
         var temp = "temp-null"
         var humidity = "humidity-null"
         var jReader = json_reader()
-        jReader.readJsonConfig()
+        jReader.read_json_config()
 
         try {
             var result: StringBuilder = StringBuilder()

@@ -14,6 +14,8 @@ class json_reader {
 
     var email: String = ""
     var password: String = ""
+    var token: String = ""
+    var owner_token: String = ""
     var status: String = ""
 
     var maxsize: Int = 50
@@ -35,7 +37,7 @@ class json_reader {
     //expr
     var raspi_addr = ""
 
-    fun readJsonConfig(){
+    fun read_json_config(){
 
         try {
             var text = config_file.readText()
@@ -52,6 +54,9 @@ class json_reader {
             email = a_obj.get("email") as String
             password = a_obj.get("password") as String
             status = a_obj.get("status") as String
+            token = a_obj.get("token") as String
+            owner_token = a_obj.get("owner_token") as String
+            //
 
             // Functions and actions objects
             var f_keys = f_obj.keys
@@ -67,6 +72,8 @@ class json_reader {
             f_values.forEach {
                 actions[count++] = it as String
             }
+            //
+
             // Users and ids objects
             var u_temp = u_obj.entries
             for(a in 0..u_temp.indices.last) {
@@ -74,30 +81,33 @@ class json_reader {
                 usernames[a] = t_temp[0]
                 ids[a] = t_temp[1]
             }
+            //
 
             // Create RedditCreds object and fill it with stuff from file
             r_username = r_obj.get("username") as String
             r_password = r_obj.get("password") as String
             r_client_id = r_obj.get("client_id") as String
             r_client_secret = r_obj.get("client_secret") as String
+            //
 
             // Experimental stuff
             raspi_addr = exp_obj.get("raspi-addr") as String
+            //
 
         } catch (ex: Exception) {
-            println("Error in readJson -- ${ex.message}")
+            println("Error in readJsonFromConfig -- ${ex.message}")
         }
     }
 
-    fun getEmailFromConfig(): String {
+    fun get_email(): String {
         return email
     }
 
-    fun getPasswordFromConfig(): String {
+    fun get_password(): String {
         return password
     }
 
-    fun getUserIDFromConfig(username: String): String {
+    fun get_user_id(username: String): String {
         var r_id = "r_id null"
 
         try {
@@ -113,7 +123,7 @@ class json_reader {
         return r_id
     }
 
-    fun writeUsersToConfig(m_users: Collection<User>?) {
+    fun write_users(m_users: Collection<User>?) {
 
         try {
 
@@ -144,7 +154,7 @@ class json_reader {
 
     }
 
-    fun writeFunctionsToConfig(newVar: String) {
+    fun write_functions(newVar: String) {
 
         try {
 
@@ -153,7 +163,7 @@ class json_reader {
             var action = newFuncAct[1].trim()
 
             var text = config_file.readText()
-            var jsonObject = JSONParser().parse(text.toString()) as JSONObject
+            var jsonObject = JSONParser().parse(text) as JSONObject
             var f_obj = jsonObject.get("functions") as JSONObject
 
             var functionsInConfig = f_obj.toString()
@@ -173,7 +183,20 @@ class json_reader {
             println("Error in writeFunctionsToConfig -- ${ex.message}")
         }
         
-        readJsonConfig()
+        read_json_config()
+
+    }
+
+    fun remove_functions(func: String) {
+
+        var text = config_file.readText()
+        var jsonObject = JSONParser().parse(text) as JSONObject
+
+        functions.forEach {
+            if(it.length != 0 && func.equals(it)) {
+                jsonObject.remove(func)
+            }
+        }
 
     }
 }

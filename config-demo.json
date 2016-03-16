@@ -2,6 +2,8 @@
   "api": {
     "email": "EMAIL HERE",
     "password": "PASSWORD HERE",
+    "token": "THIS WILL BE FILLED AUTOMAGICALLY",
+    "owner-token": "YOU WILL HAVE TO FILL IN THE API TOKEN OF THE BOT OWNER HERE",
     "status": "DEFAULT STATUS OF BOT"
   },
   "functions": {

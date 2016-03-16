@@ -43,11 +43,11 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
         //Read config information from the .json file
         var jReader = json_reader()
-        jReader.readJsonConfig()
+        jReader.read_json_config()
 
         //Create an instance of a log file
         var log: log = log()
-        log.setNewFileName(log._FILENAME)
+        log.setNewFileName(log._LOG_FILENAME)
         var logText = "[$channel] $user > $msg"
 
         //Print out the message
@@ -79,11 +79,6 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
         }
 
-        /*
-        *
-        * Start of cluster fuck
-        *
-        * */
         thread() {
             if(msg.equals("${prefix}bot")) {
                 postCommands(message)
@@ -130,7 +125,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                     if(jReader.functions[a].length < 1) {
 
                     } else {
-                        temp += jReader.functions[a] + "\n"
+                        temp += "```" + jReader.functions[a] + "```"
                         ++function_count
                     }
                 }
@@ -140,27 +135,30 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                     message.reply("There are $function_count functions in the file: \n$temp")
                 }
 
-                /*
-                var function_count = 0
-                for(a in 0..filefunc.max_size-1) {
-                    if(_functions[a].length != 0 && _actions[a].length != 0) {
-                        ++function_count
-                    }
-                }
-                var temp = Array(function_count, {i -> ""})
-                for(a in 0..temp.size-1) {
-                    temp[a] = _functions[a]
-                }
-                var reply_string = "There are $function_count functions in the file currently:\n"
-                temp.forEach {
-                    reply_string += "$it\n"
-                }
-                message.reply(reply_string)
-                */
             }
             else if(msg.startsWith("${prefix}add-funcs")) {
-                var newFunc = msg.substring(10, msg.length)
-                jReader.writeFunctionsToConfig(newFunc)
+                var new_func = msg.substring(10, msg.length)
+                jReader.write_functions(new_func)
+            }
+
+            else if(msg.startsWith("${prefix}edit-funcs")) {
+                var func = msg.substring(12, msg.length)
+
+                if(!func.contains('\\')){
+                    //Wrong syntax
+                    message.reply("Wrong syntax - try using a \\")
+                } else {
+
+                    jReader.functions.forEach {
+                        if(it.length != 0 && func.equals(it)) {
+                            jReader.remove_functions(func)
+                        }
+                    }
+
+                }
+
+                jReader.write_functions(func)
+
             }
 
             else if(msg.contains("${prefix}status")) {
@@ -230,6 +228,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 }
             }
 
+            // Expr stuff
             else if(msg.contains("${prefix}temp")) {
                 if(!message.author.id.equals("90548142981808128")) {
                     message.reply("MCFrank only pls :3")
@@ -246,6 +245,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                     message.reply(temp)
                 }
             }
+            // Expr stuff
 
             else if(msg.contains("${prefix}daisy")) {
                 var web = web()
@@ -328,7 +328,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
         println("[$channel] $usr > EDITED MESSAGED $originalMessage [to] $newMessage")
         var log = log()
-        log.setNewFileName(log._FILENAME)
+        log.setNewFileName(log._LOG_FILENAME)
         log.setNewFileText("[$channel] $usr > EDITED MESSAGED $originalMessage [to] $newMessage")
     }
 
@@ -342,19 +342,21 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         var channel: String? = message.channelReceiver.name
 
         var log: log = log()
-        log.setNewFileName(log._FILENAME)
+        log.setNewFileName(log._LOG_FILENAME)
         log.setNewFileText( ("[$channel] $user's message was deleted: $msg") )
-        println("[$channel] $user's message was deleted: $msg")
         log.writeFile()
+
+        println("[$channel] $user's message was deleted: $msg")
     }
 
     override fun onUserChangeName(api: DiscordAPI, user: User, oldName: String) {
         var logText = "[User Changed Name] $oldName changed their name to ${user.name}"
-        println(logText)
         var log: log = log()
-        log.setNewFileName(log._FILENAME)
+        log.setNewFileName(log._LOG_FILENAME)
         log.setNewFileText(logText)
         log.writeFile()
+
+        println(logText)
     }
 
     override fun onServerJoin(api: DiscordAPI, server: Server) {
@@ -363,31 +365,41 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
     override fun onChannelChangeName(api: DiscordAPI, channel: Channel, oldName: String) {
         var logText = "[Channel Name Change] $oldName channel's name changed to ${channel.name}"
-        println(logText)
         var log = log()
-        log.setNewFileName(log._FILENAME)
+        log.setNewFileName(log._LOG_FILENAME)
         log.setNewFileText(logText)
+
+        println(logText)
     }
 
     override fun onChannelChangeTopic(api: DiscordAPI, channel: Channel, oldTopic: String) {
         var logText = "[Channel Changed Topic] ${channel.name}'s topic changed from $oldTopic to ${channel.topic}"
-        println(logText)
         var log = log()
-        log.setNewFileName(log._FILENAME)
+        log.setNewFileName(log._LOG_FILENAME)
         log.setNewFileText(logText)
         log.writeFile()
+
+        println(logText)
     }
 
     override fun onServerChangeName(api: DiscordAPI, server: Server, name: String) {
+        var logText = "[SERVER CHANGE] $name name changed to ${server.name}"
+        var log = log()
+        log.setNewFileName(log._LOG_FILENAME)
+        log.setNewFileText(logText)
+        log.writeFile()
 
+        println(logText)
     }
 
     override fun onRoleCreate(api: DiscordAPI, role: Role) {
         var logText = "${role.name} created"
         var log = log()
-        log.setNewFileName(log._FILENAME)
+        log.setNewFileName(log._LOG_FILENAME)
         log.setNewFileText(logText)
         log.writeFile()
+
+        println(logText)
     }
 
     //
@@ -398,7 +410,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 .append("My functions are (everyone):\n")
                 .appendCode("", "filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord bot-log.txt")
                 .appendCode("", "get-funcs - Retrieves list of dynamic functions in the file currently")
-                .appendCode("", "add-func new-function1 \\ new-action1 - Adds a function to the functions file")
+                .appendCode("", "add-funcs new-function1 \\ new-action1 - Adds a function to the file")
+                .appendCode("", "edit-funcs function1 \\ new-action1 - Edits a function in the file")
                 .appendCode("", "avatar <user> - Posts the image of the user specified, currently must be the exact name of the user\n")
                 .appendCode("", "/r/<subreddit> - Posts a random link from <subreddit>")
                 .appendCode("", "Daisy - Posts a random link from /r/DaisyRidley")

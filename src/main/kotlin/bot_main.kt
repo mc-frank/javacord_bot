@@ -11,9 +11,9 @@ import com.google.common.util.concurrent.FutureCallback
  */
 fun main(args: Array<String>) {
     var jReader = json_reader()
-    jReader.readJsonConfig()
-    var email = jReader.getEmailFromConfig()
-    var pass = jReader.getPasswordFromConfig()
+    jReader.read_json_config()
+    var email = jReader.get_email()
+    var pass = jReader.get_password()
 
     val api = Javacord.getApi()
 
@@ -74,7 +74,7 @@ fun setupAPI(n_api: DiscordAPI?, jReader: json_reader) {
                 file.delete()
             }
             var users = api.users
-            jReader.writeUsersToConfig(users)
+            jReader.write_users(users)
             var file_text = ""
             users?.forEach {
                 println("${it.name} - (${it.id})")
