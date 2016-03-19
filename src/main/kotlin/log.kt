@@ -7,14 +7,16 @@ import kotlin.text.split
 /**
  * Created by unwin on 10/01/2016.
  */
-class log {
+class log() {
+
     val _LOG_FILENAME: String = "bot-log.txt"
     val _STATE_FILENAME: String = "status-log.txt"
     private var fileName: String = ""
     private var text: String = ""
 
+
     /* Get the number of times filterText has been mentioned in the file */
-    fun filterText(filterText: String): Int{
+    fun filter_text(filterText: String): Int{
         var count: Int = -1
 
         try{
@@ -48,17 +50,17 @@ class log {
     }
 
     /* Set the text of the file */
-    fun setNewFileText(newText: String) {
+    fun set_file_text(newText: String) {
         text = newText
     }
 
     /* Set the file name */
-    fun setNewFileName(newFileName: String) {
+    fun set_file_name(newFileName: String) {
         fileName = newFileName
     }
 
     /* Write the file */
-    fun writeFile() {
+    fun write_file() {
         try{
             var file = File(fileName)
 

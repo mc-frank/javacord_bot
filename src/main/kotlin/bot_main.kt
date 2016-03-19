@@ -12,17 +12,22 @@ import com.google.common.util.concurrent.FutureCallback
 fun main(args: Array<String>) {
     var jReader = json_reader()
     jReader.read_json_config()
-    var email = jReader.get_email()
-    var pass = jReader.get_password()
+    var token = jReader.token
+    var email = jReader.email
+    var password = jReader.password
 
     val api = Javacord.getApi()
 
+    //If your account is not of bot type - comment this out
+    api.setToken(token, false)
+
+    //Otherwise use this
     api.setEmail(email)
-    api.setPassword(pass)
+    api.setPassword(password)
 
     api.connect(object: FutureCallback<DiscordAPI> {
         override fun onSuccess(api: DiscordAPI?) {
-            println("Connect to Discord as ${api?.yourself?.name}/(@${api?.yourself?.id}). Token = ${api?.token}")
+            println("Connect to Discord as ${api?.yourself?.name}/(@${api?.yourself?.id})")
             setupAPI(api, jReader)
         }
 
@@ -37,6 +42,7 @@ fun setupAPI(n_api: DiscordAPI?, jReader: json_reader) {
     var api = n_api as DiscordAPI
 
     api.game = jReader.status
+    api.isIdle = true
     api.registerListener(mainListener())
     api.setAutoReconnect(true)
 

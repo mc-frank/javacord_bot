@@ -8,6 +8,7 @@ import de.btobastian.javacord.entities.message.Message
 import de.btobastian.javacord.entities.message.MessageBuilder
 import de.btobastian.javacord.listener.channel.ChannelChangeNameListener
 import de.btobastian.javacord.listener.channel.ChannelChangeTopicListener
+import de.btobastian.javacord.listener.channel.ChannelCreateListener
 import de.btobastian.javacord.listener.message.MessageCreateListener
 import de.btobastian.javacord.listener.message.MessageDeleteListener
 import de.btobastian.javacord.listener.message.MessageEditListener
@@ -17,8 +18,11 @@ import de.btobastian.javacord.listener.server.ServerChangeNameListener
 import de.btobastian.javacord.listener.server.ServerJoinListener
 import de.btobastian.javacord.listener.user.UserChangeNameListener
 import java.io.File
+import java.io.FileOutputStream
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
+import java.net.URL
+import java.nio.channels.Channels
 import kotlin.collections.forEach
 import kotlin.collections.toTypedArray
 import kotlin.concurrent.thread
@@ -29,7 +33,8 @@ import kotlin.text.*
  */
 class mainListener: MessageCreateListener, MessageEditListener, TypingStartListener,
         MessageDeleteListener, UserChangeNameListener, ServerJoinListener, ChannelChangeNameListener,
-        ChannelChangeTopicListener, ServerChangeNameListener, RoleCreateListener
+        ChannelChangeTopicListener, ServerChangeNameListener, RoleCreateListener,
+        ChannelCreateListener
 {
 
     val prefix = "$"
@@ -47,23 +52,29 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
         //Create an instance of a log file
         var log: log = log()
-        log.setNewFileName(log._LOG_FILENAME)
+        log.set_file_name(log._LOG_FILENAME)
         var logText = "[$channel] $user > $msg"
-
-        //Print out the message
-        println(logText)
 
         // Ignore if the message is a private message
         if(message.isPrivateMessage) {
             println("$user sent a private message - $msg")
-            log.setNewFileText("[PRIVATE MESSAGE] $user > $msg")
-            log.writeFile()
+            log.set_file_name("[PRIVATE MESSAGE] $user > $msg")
+            log.write_file()
+
+            //if(message.author.id.equals(jReader.owner_id)) {
+                // Download file and update
+                var items = message.attachments
+                println("items = ${items.size}")
+                var url = items.elementAt(0).url
+                download_file(url)
+            //}
             return
         }
 
         //Only print to file and to console if message isn't a PM
-        log.setNewFileText( logText )
-        log.writeFile()
+        log.set_file_text( logText )
+        log.write_file()
+        println(logText)
 
 
         // Ignore if message comes from bot
@@ -72,7 +83,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         }
 
 
-        // Respond to BotBT's penis functions -- DONE
+        // Respond to BotBT's penis functions
         if(user.equals("BotBT")) {
             if(msg.contains("8") && msg.contains("=") && msg.contains("D")) {
                 message.reply("( ͡° ͜ʖ ͡°)")
@@ -100,7 +111,7 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 var word: String = msg.substring(8, msg.length)
                 word.toLowerCase().trim()
 
-                var count = log.filterText(word)
+                var count = log.filter_text(word)
                 message.reply("$word has been mentioned in $count messages")
             }
             else if(msg.contains("${prefix}broadcast")) {
@@ -268,23 +279,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
             }
 
             else if(msg.contains("${prefix}dump")) {
-                var file = File("bot-log.txt")
+                var file = File(log()._LOG_FILENAME)
                 message.channelReceiver.sendFile(file)
-                /*
-                message.reply("This is gonna take a while - please wait")
-                message.reply("Please also note this file may not be organised, I am only getting the messages from Discord as they give them to me")
-                var size = 10//Integer.MAX_VALUE
-                var channel_history = message.channelReceiver.getMessageHistory(size)
-                var channel_msg_history = channel_history.get()
-                var msgHistoryFile = File("msgHistoryFile.txt")
-                var file_text = ""
-                channel_msg_history.iterator().forEach {
-                    file_text += it.content + "\r\n"
-                }
-                msgHistoryFile.writeText(file_text)
-                message.channelReceiver.sendFile(msgHistoryFile)
-                msgHistoryFile.deleteOnExit()
-                */
             }
             else if(msg.contains("${prefix}chuck") || msg.contains("${prefix}norris")) {
                 var web = web()
@@ -328,8 +324,8 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
 
         println("[$channel] $usr > EDITED MESSAGED $originalMessage [to] $newMessage")
         var log = log()
-        log.setNewFileName(log._LOG_FILENAME)
-        log.setNewFileText("[$channel] $usr > EDITED MESSAGED $originalMessage [to] $newMessage")
+        log.set_file_name(log._LOG_FILENAME)
+        log.set_file_text("[$channel] $usr > EDITED MESSAGED $originalMessage [to] $newMessage")
     }
 
     override fun onTypingStart(api: DiscordAPI, user: User, channel: Channel?) {
@@ -342,9 +338,9 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
         var channel: String? = message.channelReceiver.name
 
         var log: log = log()
-        log.setNewFileName(log._LOG_FILENAME)
-        log.setNewFileText( ("[$channel] $user's message was deleted: $msg") )
-        log.writeFile()
+        log.set_file_name(log._LOG_FILENAME)
+        log.set_file_text( ("[$channel] $user's message was deleted: $msg") )
+        log.write_file()
 
         println("[$channel] $user's message was deleted: $msg")
     }
@@ -352,9 +348,9 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
     override fun onUserChangeName(api: DiscordAPI, user: User, oldName: String) {
         var logText = "[User Changed Name] $oldName changed their name to ${user.name}"
         var log: log = log()
-        log.setNewFileName(log._LOG_FILENAME)
-        log.setNewFileText(logText)
-        log.writeFile()
+        log.set_file_name(log._LOG_FILENAME)
+        log.set_file_text(logText)
+        log.write_file()
 
         println(logText)
     }
@@ -366,28 +362,37 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
     override fun onChannelChangeName(api: DiscordAPI, channel: Channel, oldName: String) {
         var logText = "[Channel Name Change] $oldName channel's name changed to ${channel.name}"
         var log = log()
-        log.setNewFileName(log._LOG_FILENAME)
-        log.setNewFileText(logText)
-
+        log.set_file_name(log._LOG_FILENAME)
+        log.set_file_text(logText)
+        log.write_file()
         println(logText)
     }
 
     override fun onChannelChangeTopic(api: DiscordAPI, channel: Channel, oldTopic: String) {
         var logText = "[Channel Changed Topic] ${channel.name}'s topic changed from $oldTopic to ${channel.topic}"
         var log = log()
-        log.setNewFileName(log._LOG_FILENAME)
-        log.setNewFileText(logText)
-        log.writeFile()
+        log.set_file_name(log._LOG_FILENAME)
+        log.set_file_text(logText)
+        log.write_file()
 
         println(logText)
+    }
+
+    override fun onChannelCreate(api: DiscordAPI, channel: Channel) {
+        var logText = "${channel.name} created"
+        var log = log()
+        log.set_file_name(log._LOG_FILENAME)
+        log.set_file_text(logText)
+        println(logText)
+        log.write_file()
     }
 
     override fun onServerChangeName(api: DiscordAPI, server: Server, name: String) {
         var logText = "[SERVER CHANGE] $name name changed to ${server.name}"
         var log = log()
-        log.setNewFileName(log._LOG_FILENAME)
-        log.setNewFileText(logText)
-        log.writeFile()
+        log.set_file_name(log._LOG_FILENAME)
+        log.set_file_text(logText)
+        log.write_file()
 
         println(logText)
     }
@@ -395,9 +400,9 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
     override fun onRoleCreate(api: DiscordAPI, role: Role) {
         var logText = "${role.name} created"
         var log = log()
-        log.setNewFileName(log._LOG_FILENAME)
-        log.setNewFileText(logText)
-        log.writeFile()
+        log.set_file_name(log._LOG_FILENAME)
+        log.set_file_text(logText)
+        log.write_file()
 
         println(logText)
     }
@@ -421,6 +426,17 @@ class mainListener: MessageCreateListener, MessageEditListener, TypingStartListe
                 .appendCode("", "stop - Stops the bot, I can only be slain by the dank MCFrank")
 
                 .build())
+    }
+
+    fun download_file(url: URL) {
+
+        var rbc = Channels.newChannel(url.openStream())
+
+        var fos = FileOutputStream("javacord_bot.jar")
+
+        fos.channel.transferFrom(rbc, 0, Long.MAX_VALUE)
+
+
     }
 
 }

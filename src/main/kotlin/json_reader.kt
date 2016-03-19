@@ -15,7 +15,7 @@ class json_reader {
     var email: String = ""
     var password: String = ""
     var token: String = ""
-    var owner_token: String = ""
+    var owner_id: String = ""
     var status: String = ""
 
     var maxsize: Int = 50
@@ -55,7 +55,7 @@ class json_reader {
             password = a_obj.get("password") as String
             status = a_obj.get("status") as String
             token = a_obj.get("token") as String
-            owner_token = a_obj.get("owner_token") as String
+            owner_id = a_obj.get("owner_id") as String
             //
 
             // Functions and actions objects
@@ -97,14 +97,6 @@ class json_reader {
         } catch (ex: Exception) {
             println("Error in readJsonFromConfig -- ${ex.message}")
         }
-    }
-
-    fun get_email(): String {
-        return email
-    }
-
-    fun get_password(): String {
-        return password
     }
 
     fun get_user_id(username: String): String {
