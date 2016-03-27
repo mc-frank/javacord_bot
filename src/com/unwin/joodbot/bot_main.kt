@@ -1,3 +1,5 @@
+package com.unwin.joodbot
+
 import java.io.File
 import kotlin.text.split
 import kotlin.text.startsWith
@@ -5,25 +7,29 @@ import de.btobastian.javacord.*
 import kotlin.collections.forEach
 import kotlin.text.*
 import com.google.common.util.concurrent.FutureCallback
+import de.btobastian.sdcf4j.handler.JavacordHandler
+import com.unwin.joodbot.commands.*
 
 /**
  * Created by unwin on 10/01/2016.
  */
 fun main(args: Array<String>) {
+    val api = Javacord.getApi()
+
     var jReader = json_reader()
     jReader.read_json_config()
     var token = jReader.token
     var email = jReader.email
     var password = jReader.password
 
-    val api = Javacord.getApi()
+    var bot_account = jReader.is_bot_account
 
-    //If your account is not of bot type - comment this out
-    api.setToken(token, false)
-
-    //Otherwise use this
-    api.setEmail(email)
-    api.setPassword(password)
+    if(bot_account) {
+        api.setToken(token, false)
+    } else {
+        api.setEmail(email)
+        api.setPassword(password)
+    }
 
     api.connect(object: FutureCallback<DiscordAPI> {
         override fun onSuccess(api: DiscordAPI?) {
@@ -43,12 +49,32 @@ fun setupAPI(n_api: DiscordAPI?, jReader: json_reader) {
 
     api.game = jReader.status
     api.isIdle = true
-    api.registerListener(mainListener())
+    api.registerListener(main_listener())
+
+    //Register commands using sdcf4j.
+    var command_handler = JavacordHandler(api)
+
+    command_handler.registerCommand(bot_command())
+    command_handler.registerCommand(chuck_command())
+    command_handler.registerCommand(reconnect_command())
+    command_handler.registerCommand(daisy_command())
+    command_handler.registerCommand(avatar_command())
+    command_handler.registerCommand(info_command())
+    command_handler.registerCommand(filter_command())
+    command_handler.registerCommand(getfuncs_command())
+    command_handler.registerCommand(addfuncs_command())
+    command_handler.registerCommand(editfuncs_command())
+    command_handler.registerCommand(execute_command())
+    command_handler.registerCommand(subreddit_command())
+    command_handler.registerCommand(status_command())
+    command_handler.registerCommand(stop_command())
+    command_handler.registerCommand(dump_command())
+    //
+
     api.setAutoReconnect(true)
 
     // Do console based commands
-    var mainListener = mainListener()
-    var prefix = mainListener.prefix
+    var prefix = "$"
 
     while (true) {
 

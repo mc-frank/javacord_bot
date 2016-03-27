@@ -1,3 +1,5 @@
+package com.unwin.joodbot
+
 import java.io.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat

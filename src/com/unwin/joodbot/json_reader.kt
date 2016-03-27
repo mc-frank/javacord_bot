@@ -1,3 +1,5 @@
+package com.unwin.joodbot
+
 import com.google.gson.GsonBuilder
 import de.btobastian.javacord.entities.User
 import java.io.File
@@ -17,6 +19,8 @@ class json_reader {
     var token: String = ""
     var owner_id: String = ""
     var status: String = ""
+    var prefix: String = ""
+    var is_bot_account: Boolean = false
 
     var maxsize: Int = 50
 
@@ -56,6 +60,9 @@ class json_reader {
             status = a_obj.get("status") as String
             token = a_obj.get("token") as String
             owner_id = a_obj.get("owner_id") as String
+            prefix = a_obj.get("prefix") as String
+            var is_bot_account_temp = a_obj.get("is_bot_account") as String
+            is_bot_account = is_bot_account_temp.toBoolean()
             //
 
             // Functions and actions objects
@@ -95,7 +102,7 @@ class json_reader {
             //
 
         } catch (ex: Exception) {
-            println("Error in readJsonFromConfig -- ${ex.message}")
+            println("Error in read_json_from_config -- ${ex.message}")
         }
     }
 
@@ -146,13 +153,12 @@ class json_reader {
 
     }
 
-    fun write_functions(newVar: String) {
+    fun write_functions(new_func: String, new_action: String) {
 
         try {
 
-            var newFuncAct = newVar.split('\\')
-            var function = newFuncAct[0].trim()
-            var action = newFuncAct[1].trim()
+            var function = new_func
+            var action = new_action
 
             var text = config_file.readText()
             var jsonObject = JSONParser().parse(text) as JSONObject
