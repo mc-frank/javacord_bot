@@ -25,6 +25,7 @@ class execute_command : CommandExecutor {
         val pool = ClassPool.getDefault()
         pool.insertClassPath(ClassClassPath(api.javaClass))
         pool.importPackage("java.io.File")
+        pool.importPackage("")
         pool.importPackage("de.btobastian.javacord.entities")
         pool.importPackage("de.btobastian.javacord.entities.message")
         pool.importPackage("de.btobastian.javacord.entities.invite")
@@ -38,7 +39,13 @@ class execute_command : CommandExecutor {
         val obj = clazz.newInstance()
         val meth = clazz.getDeclaredMethod("executeCode", DiscordAPI::class.java, Message::class.java, Channel::class.java, Server::class.java, User::class.java)
         val server = if (message.channelReceiver != null) message.channelReceiver.server else null
-        return "```" + meth.invoke(obj, api, message, message.channelReceiver, server, message.author).toString() + "```"
+        var return_string = "```" + meth.invoke(obj, api, message, message.channelReceiver, server, message.author).toString() + "```"
+
+        if(return_string.contains(api.token)) {
+            return_string = "Pls don't try to get the token :D"
+        }
+
+        return return_string
     }
 
 }

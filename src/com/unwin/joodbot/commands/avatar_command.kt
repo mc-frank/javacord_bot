@@ -14,7 +14,6 @@ class avatar_command : CommandExecutor {
 
     @Command(aliases = arrayOf("\$avatar"), description = "Returns the avatar of user specified")
     fun onCommand(command: String, args: Array<String>, message: Message, api: DiscordAPI) {
-
         var pathName = "pics-temp/"
         var path = File(pathName)
         var word: String = message.content.substring(8, message.content.length).toLowerCase().trim()

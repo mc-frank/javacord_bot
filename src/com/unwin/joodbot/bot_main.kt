@@ -65,7 +65,7 @@ fun setupAPI(n_api: DiscordAPI?, jReader: json_reader) {
     command_handler.registerCommand(addfuncs_command())
     command_handler.registerCommand(editfuncs_command())
     command_handler.registerCommand(execute_command())
-    command_handler.registerCommand(subreddit_command())
+    //command_handler.registerCommand(subreddit_command()) <-- Currently broken with the way sdcf4j splits arguments
     command_handler.registerCommand(status_command())
     command_handler.registerCommand(stop_command())
     command_handler.registerCommand(dump_command())
@@ -74,7 +74,7 @@ fun setupAPI(n_api: DiscordAPI?, jReader: json_reader) {
     api.setAutoReconnect(true)
 
     // Do console based commands
-    var prefix = "$"
+    var prefix = jReader.prefix
 
     while (true) {
 

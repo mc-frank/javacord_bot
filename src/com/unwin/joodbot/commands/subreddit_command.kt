@@ -15,20 +15,24 @@ class subreddit_command : CommandExecutor {
 
     @Command(aliases = arrayOf("\$/r/"), description = "Returns random image from a subreddit")
     fun onCommand(command: String, args: Array<String>): String {
-        var subredditName = args[0]
-        println("subreddit name = $subredditName")
+        var subreddit_name = args[0]
+        return get_post(subreddit_name)
+    }
+
+    fun get_post(subreddit_name: String): String {
+        println("subreddit name = $subreddit_name")
         var link = "link-null"
 
         try {
             var redditClient = getRedditClient()
             var post: Submission
-            var subreddit = redditClient.getSubreddit(subredditName)
+            var subreddit = redditClient.getSubreddit(subreddit_name)
             // If my pull request is successful this will change to .isQuarantined
             if(subreddit.isNsfw){
                 //
             }
 
-            post = redditClient.getRandomSubmission(subredditName)
+            post = redditClient.getRandomSubmission(subreddit_name)
 
             link = post.title + " - " + post.url
         } catch(ex: Exception) {
@@ -39,19 +43,20 @@ class subreddit_command : CommandExecutor {
         return link
     }
 
+
     //JRAW Reddit Stuff
     fun getRedditClient(): RedditClient {
         var userAgent = UserAgent.of("discord-bot", "com.unwin.discord-bot", "v3.0", "fcumbadass")
-        var redditClient = RedditClient(userAgent)
+        var reddit_client = RedditClient(userAgent)
 
         var jReader = json_reader()
         jReader.read_json_config()
 
         var credentials = Credentials.script(jReader.r_username, jReader.r_password, jReader.r_client_id, jReader.r_client_secret)
-        var authData = redditClient.oAuthHelper.easyAuth(credentials)
-        redditClient.authenticate(authData)
+        var authData = reddit_client.oAuthHelper.easyAuth(credentials)
+        reddit_client.authenticate(authData)
 
-        return redditClient
+        return reddit_client
     }
 
 }
