@@ -16,13 +16,13 @@ import com.unwin.joodbot.commands.*
 fun main(args: Array<String>) {
     val api = Javacord.getApi()
 
-    var jReader = json_reader()
-    jReader.read_json_config()
-    var token = jReader.token
-    var email = jReader.email
-    var password = jReader.password
+    var j_reader = json_reader()
+    j_reader.read_json_config()
+    var token = j_reader.token
+    var email = j_reader.email
+    var password = j_reader.password
 
-    var bot_account = jReader.is_bot_account
+    var bot_account = j_reader.is_bot_account
 
     if(bot_account) {
         api.setToken(token, false)
@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
     api.connect(object: FutureCallback<DiscordAPI> {
         override fun onSuccess(api: DiscordAPI?) {
             println("Connect to Discord as ${api?.yourself?.name}/(@${api?.yourself?.id})")
-            setupAPI(api, jReader)
+            setupAPI(api, j_reader)
         }
 
         override fun onFailure(t: Throwable) {
@@ -44,10 +44,10 @@ fun main(args: Array<String>) {
 }
 
 // Run when the api gets a connection to the server
-fun setupAPI(n_api: DiscordAPI?, jReader: json_reader) {
+fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
     var api = n_api as DiscordAPI
 
-    api.game = jReader.status
+    api.game = j_reader.status
     api.isIdle = true
     api.registerListener(main_listener())
 
@@ -74,7 +74,7 @@ fun setupAPI(n_api: DiscordAPI?, jReader: json_reader) {
     api.setAutoReconnect(true)
 
     // Do console based commands
-    var prefix = jReader.prefix
+    var prefix = j_reader.prefix
 
     while (true) {
 
@@ -106,7 +106,7 @@ fun setupAPI(n_api: DiscordAPI?, jReader: json_reader) {
                 file.delete()
             }
             var users = api.users
-            jReader.write_users(users)
+            j_reader.write_users(users)
             var file_text = ""
             users?.forEach {
                 println("${it.name} - (${it.id})")
@@ -126,15 +126,9 @@ fun setupAPI(n_api: DiscordAPI?, jReader: json_reader) {
             api.acceptInvite(invite)
         }
         else if (input.startsWith("${prefix}reconnect")) {
-            api.reconnect(object: FutureCallback<DiscordAPI> {
-                override fun onSuccess(api: DiscordAPI?) {
-                    println("Reconnected")
-                    setupAPI(api, jReader)
-                }
-                override fun onFailure(t: Throwable) {
-                    println("Reconnect failed :(")
-                }
-            })
+            api.setAutoReconnect(false)
+            api.reconnectBlocking()
+            api.setAutoReconnect(true)
         }
 
     }

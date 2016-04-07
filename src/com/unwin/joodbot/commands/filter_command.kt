@@ -16,7 +16,7 @@ class filter_command : CommandExecutor {
 
         var server_id = message.channelReceiver.server.id
         var count = log().filter_text(word, server_id)
-        return "$word has been mentioned in $count messages"
+        return "```$word``` has been mentioned in $count messages"
     }
 
 }

@@ -13,7 +13,10 @@ class addfuncs_command : CommandExecutor {
     @Command(aliases = arrayOf("\$add-funcs"), description = "Adds a function to the file")
     fun onCommand(command: String, args: Array<String>, message: Message) {
         var new_func = args[0]
-        var new_action = args[1]
+        var new_action = ""
+        for(i in 1..args.size-1) {
+            new_action += " " + args[i]
+        }
 
         var j_reader = json_reader()
         j_reader.read_json_config()
