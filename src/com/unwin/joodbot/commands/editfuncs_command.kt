@@ -12,7 +12,10 @@ class editfuncs_command : CommandExecutor {
     @Command(aliases = arrayOf("\$edit-funcs"), description = "Overwrites a function in the file")
     fun onCommand(command: String, args: Array<String>) {
         var func = args[0]
-        var action = args[1]
+        var action = ""
+        for(i in 1..args.size-1) {
+            action += " " + args[i]
+        }
 
         var j_reader = json_reader()
         j_reader.read_json_config()

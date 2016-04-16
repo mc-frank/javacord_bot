@@ -13,7 +13,7 @@ class dump_command : CommandExecutor {
 
     @Command(aliases = arrayOf("\$dump"), description = "Dumps the com.unwin.joodbot.log file")
     fun onCommand(command: String, args: Array<String>, message: Message) {
-        var file = File(log()._LOG_FILENAME + "-" + message.channelReceiver.id + ".txt")
+        var file = File(log()._LOG_FILENAME + "-" + message.channelReceiver.server.id + ".txt")
         message.replyFile(file)
     }
 
