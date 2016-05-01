@@ -8,6 +8,9 @@
     "prefix": "DEFAULT PREFIX FOR COMMANDS",
     "is_bot_account": "TRUE IF ACCOUNT IS OF BOT TYPE, FALSE OTHERWISE"
   },
+  "channels" : {
+
+  },
   "functions": {
     "FUNCTION-TRIGGER": "ACTION"
   },
@@ -16,9 +19,6 @@
     "password": "REDDIT PASSWORD HERE",
     "client_id": "REDDIT CLIENT ID HERE",
     "client_secret": "REDDIT CLIENT SECRET"
-  },
-  "exp": {
-    "raspi-addr": "LEAVE BLANK - THIS IS DEBUG STUFF"
   },
   "users": {
     "USER": "ID",

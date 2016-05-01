@@ -9,7 +9,7 @@ import de.btobastian.sdcf4j.CommandExecutor
  */
 class stop_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("\$stop"), description = "Stops the bot")
+    @Command(aliases = arrayOf("stop"), description = "Stops the bot")
     fun onCommand(command: String, args: Array<String>, api: DiscordAPI) {
         System.exit(-1)
     }

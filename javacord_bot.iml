@@ -13,14 +13,12 @@
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/kotlin" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/com/unwin/joodbot" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: de.btobastian.javacord:javacord:2.0.9-18" level="project" />
+    <orderEntry type="library" name="Maven: de.btobastian.javacord:javacord:2.0.10" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20140107" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />
@@ -34,8 +32,9 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.3.6" level="project" />
     <orderEntry type="library" name="Maven: com.neovisionaries:nv-websocket-client:1.22" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.18" level="project" />
-    <orderEntry type="library" name="Maven: de.btobastian.sdcf4j:sdcf4j-core:1.0.0-1" level="project" />
-    <orderEntry type="library" name="Maven: de.btobastian.sdcf4j:sdcf4j-javacord:1.0.0-1" level="project" />
+    <orderEntry type="library" name="Maven: de.btobastian.sdcf4j:sdcf4j:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: de.btobastian.sdcf4j:sdcf4j-core:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: de.btobastian.sdcf4j:sdcf4j-javacord:1.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-runtime:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1" level="project" />

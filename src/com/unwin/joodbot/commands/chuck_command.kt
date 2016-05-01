@@ -14,7 +14,7 @@ import java.net.URL
  */
 class chuck_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("\$chuck", "\$norris"), description = "Tells a Chuck Norris joke")
+    @Command(aliases = arrayOf("chuck", "norris"), description = "Tells a Chuck Norris joke")
     fun onCommand(command: String, args: Array<String>): String {
         var joke = "joke-null"
 

@@ -1,6 +1,7 @@
 package com.unwin.joodbot
 
 import com.google.gson.GsonBuilder
+import de.btobastian.javacord.entities.Channel
 import de.btobastian.javacord.entities.User
 import java.io.File
 import org.json.simple.JSONObject
@@ -10,6 +11,8 @@ import org.json.simple.parser.JSONParser
  * Created by unwin on 01-Mar-16.
  */
 class json_reader {
+
+    var maxsize: Int = 1000
 
     val file_name = "config.json"
     var config_file = File(file_name)
@@ -22,24 +25,23 @@ class json_reader {
     var prefix: String = ""
     var is_bot_account: Boolean = false
 
-    var maxsize: Int = 50
-
     var functions = Array(maxsize, {i -> ""})
     var actions = Array(maxsize, {i -> ""})
 
-    var usernames = Array(100, {i -> ""})
-    var ids = Array(100, {i -> ""})
+    var usernames = Array(maxsize, {i -> ""})
+    var ids = Array(maxsize, {i -> ""})
 
     var r_username: String = ""
     var r_password: String = ""
     var r_client_id: String = ""
     var r_client_secret: String = ""
 
-    //
-    //
+    var channel_ids = Array(maxsize, {i -> ""})
+    var channel_marks = Array(maxsize, {i -> ""})
 
-    //expr
-    var raspi_addr = ""
+
+    //
+    //
 
     fun read_json_config(){
 
@@ -52,7 +54,7 @@ class json_reader {
             var f_obj = jsonObject.get("functions") as JSONObject
             var u_obj = jsonObject.get("users") as JSONObject
             var r_obj = jsonObject.get("reddit") as JSONObject
-            var exp_obj = jsonObject.get("exp") as JSONObject
+            var c_obj = jsonObject.get("channels") as JSONObject
 
             // Credentials objects
             email = a_obj.get("email") as String
@@ -73,12 +75,12 @@ class json_reader {
             f_keys.forEach {
                 functions[count++] = it as String
             }
-
             count = 0
 
             f_values.forEach {
                 actions[count++] = it as String
             }
+            count = 0
             //
 
             // Users and ids objects
@@ -97,13 +99,24 @@ class json_reader {
             r_client_secret = r_obj.get("client_secret") as String
             //
 
-            // Experimental stuff
-            raspi_addr = exp_obj.get("raspi-addr") as String
-            //
+            // Channels and their marks
+            var c_keys = c_obj.keys
+            var c_values = c_obj.values
+
+            c_keys.forEach {
+                channel_ids[count++] = it as String
+            }
+            count = 0
+
+            c_values.forEach {
+                channel_marks[count++] = it as String
+            }
+            count = 0
 
         } catch (ex: Exception) {
             println("Error in read_json_from_config -- ${ex.message}")
         }
+
     }
 
     fun get_user_id(username: String): String {
@@ -120,6 +133,51 @@ class json_reader {
         }
 
         return r_id
+    }
+
+    fun write_channel_mark(channel: Channel, nsfw_mark: String) {
+
+        try {
+
+            var text = config_file.readText()
+            var jsonObject = JSONParser().parse(text.toString()) as JSONObject
+            var c_obj = jsonObject.get("channels") as JSONObject
+
+            c_obj.remove(channel.id)
+            c_obj.put(channel.id, nsfw_mark)
+
+            jsonObject.replace("channels", c_obj)
+            var gson = GsonBuilder().setPrettyPrinting().create()
+            var pretty_json = gson.toJson(jsonObject)
+
+            config_file.writeText(pretty_json)
+
+        } catch(ex: Exception) {
+            println("Error in write_channel_mark -- ${ex.message}")
+        }
+
+    }
+
+    fun get_channel_mark(channel: Channel): String {
+
+        try {
+
+            for(a in 0..channel_ids.size) {
+                if(channel_ids.elementAt(a).length == 0) {
+                    //
+                } else {
+                    if(channel_ids.elementAt(a).equals(channel.id)) {
+                        return channel_marks.elementAt(a)
+                    }
+                }
+            }
+
+        } catch(ex: Exception) {
+            println("Error in get_channel_mark -- ${ex.message}")
+        }
+
+        return "null"
+
     }
 
     fun write_users(m_users: Collection<User>?) {

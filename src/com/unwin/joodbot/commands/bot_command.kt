@@ -10,7 +10,7 @@ import de.btobastian.sdcf4j.CommandExecutor
  */
 class bot_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("\$bot"), description = "Posts the bots commands")
+    @Command(aliases = arrayOf("bot"), description = "Posts the bots commands")
     fun onCommand(command: String, args: Array<String>, message: Message) {
         var channel = message.channelReceiver
         channel.sendMessage(MessageBuilder()

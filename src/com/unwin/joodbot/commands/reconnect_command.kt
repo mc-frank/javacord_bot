@@ -9,7 +9,7 @@ import de.btobastian.sdcf4j.CommandExecutor
  */
 class reconnect_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("\$reconnect"), description = "Reconnects the bot to the server")
+    @Command(aliases = arrayOf("reconnect"), description = "Reconnects the bot to the server")
     fun onCommand(command: String, args: Array<String>, api: DiscordAPI): String {
 
         api.setAutoReconnect(false)

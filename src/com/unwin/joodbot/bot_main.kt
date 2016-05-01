@@ -8,12 +8,22 @@ import kotlin.collections.forEach
 import kotlin.text.*
 import com.google.common.util.concurrent.FutureCallback
 import de.btobastian.sdcf4j.handler.JavacordHandler
+import net.dean.jraw.RedditClient
+
 import com.unwin.joodbot.commands.*
 
 /**
  * Created by unwin on 10/01/2016.
  */
+
+var _reddit_client: RedditClient? = null
+var _reddit = reddit_client()
+
 fun main(args: Array<String>) {
+    _reddit_client = _reddit.client
+    _reddit.authenticate()
+
+
     val api = Javacord.getApi()
 
     var j_reader = json_reader()
@@ -53,6 +63,7 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
 
     //Register commands using sdcf4j.
     var command_handler = JavacordHandler(api)
+    command_handler.defaultPrefix = "$"
 
     command_handler.registerCommand(bot_command())
     command_handler.registerCommand(chuck_command())
@@ -65,10 +76,10 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
     command_handler.registerCommand(addfuncs_command())
     command_handler.registerCommand(editfuncs_command())
     command_handler.registerCommand(execute_command())
-    //command_handler.registerCommand(subreddit_command()) <-- Currently broken with the way sdcf4j splits arguments
     command_handler.registerCommand(status_command())
     command_handler.registerCommand(stop_command())
     command_handler.registerCommand(dump_command())
+    command_handler.registerCommand(mark_command())
     //
 
     api.setAutoReconnect(true)

@@ -10,7 +10,7 @@ import de.btobastian.javacord.entities.message.Message
  */
 class filter_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("\$filter"), description = "Filters text in the com.unwin.joodbot.log file")
+    @Command(aliases = arrayOf("filter"), description = "Filters text in the com.unwin.joodbot.log file")
     fun onCommand(command: String, args: Array<String>, message: Message): String {
         var word = args[0].toLowerCase().trim()
 

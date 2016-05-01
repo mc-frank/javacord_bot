@@ -70,7 +70,7 @@ class main_listener: MessageCreateListener, MessageEditListener, TypingStartList
             if(message.content.startsWith("${jReader.prefix}/r/")) {
                 var subreddit_name = message.content.substring(4, message.content.length)
                 var r_getter = subreddit_command()
-                var r_post = r_getter.get_post(subreddit_name)
+                var r_post = r_getter.get_post(subreddit_name, message.channelReceiver)
                 message.reply(r_post)
             }
 

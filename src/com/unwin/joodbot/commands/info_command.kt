@@ -11,7 +11,7 @@ import java.lang.management.RuntimeMXBean
  */
 class info_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("\$info"), description = "Returns information about the bot")
+    @Command(aliases = arrayOf("info"), description = "Returns information about the bot")
     fun onCommand(command: String, args: Array<String>, api: DiscordAPI): String {
         var runtime: Runtime = Runtime.getRuntime()
         var rb: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()

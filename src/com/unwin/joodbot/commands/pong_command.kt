@@ -6,7 +6,7 @@ import de.btobastian.sdcf4j.CommandExecutor
  */
 class pong_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("\$ping"), description = "A ping-pong test")
+    @Command(aliases = arrayOf("ping"), description = "A ping-pong test")
     fun onCommand(command: String, args: Array<String>): String {
         return "PONG!"
     }

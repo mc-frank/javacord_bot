@@ -16,7 +16,7 @@ import javassist.CtNewMethod
  */
 class execute_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("\$execute"), description = "Executes inputted Java code")
+    @Command(aliases = arrayOf("execute"), description = "Executes inputted Java code")
     fun onCommand(command: String, args: Array<String>, message: Message, api: DiscordAPI): String {
         var code = ""
         args.forEach { code += " $it" }

@@ -9,7 +9,7 @@ import de.btobastian.sdcf4j.CommandExecutor
  */
 class status_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("\$status"), description = "Changes the game the bot is playing")
+    @Command(aliases = arrayOf("status"), description = "Changes the game the bot is playing")
     fun onCommand(command: String, args: Array<String>, api: DiscordAPI) {
         var new_status = ""
         args.forEach { new_status += " $it" }
