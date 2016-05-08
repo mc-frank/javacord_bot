@@ -23,7 +23,6 @@ fun main(args: Array<String>) {
     _reddit_client = _reddit.client
     _reddit.authenticate()
 
-
     val api = Javacord.getApi()
 
     var j_reader = json_reader()

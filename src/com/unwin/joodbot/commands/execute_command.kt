@@ -20,7 +20,6 @@ class execute_command : CommandExecutor {
     fun onCommand(command: String, args: Array<String>, message: Message, api: DiscordAPI): String {
         var code = ""
         args.forEach { code += " $it" }
-        println("code == $code")
         code = code.replace("return (.+);".toRegex(), "return String.valueOf($1);")
         val pool = ClassPool.getDefault()
         pool.insertClassPath(ClassClassPath(api.javaClass))

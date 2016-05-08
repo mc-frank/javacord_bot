@@ -11,10 +11,9 @@ import de.btobastian.sdcf4j.CommandExecutor
  */
 class mark_command: CommandExecutor {
 
-    @Command(aliases = arrayOf("mark"), description = "Marks a channel as NSFW or SFW", requiredPermissions = "Moderator")
+    @Command(aliases = arrayOf("mark"), description = "Marks a channel as NSFW or SFW")
     fun onCommand(command: String, args: Array<String>, channel: Channel, message: Message) {
         var nsfw_mark = args[0].toLowerCase()
-        println("NSFW-MARK == $nsfw_mark")
         if( !(nsfw_mark.equals("nsfw")) && !(nsfw_mark.equals("sfw")) ) {
             message.reply("Not a correct channel marking.\n Try using 'sfw' or 'nsfw'")
         }else {

@@ -8,7 +8,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>javacord_bot</artifactId>
-    <version>3.3.9</version>
+    <version>4.0.0</version>
 
 
     <build>
@@ -67,10 +67,6 @@
             <id>javacord-repo</id>
             <url>http://repo.bastian-oppermann.de</url>
         </repository>
-        <repository>
-            <id>sdcf4j-repo</id>
-            <url>http://repo.bastian-oppermann.de</url>
-        </repository>
 
         <repository>
             <snapshots>
@@ -83,7 +79,6 @@
 
     </repositories>
 
-
     <dependencies>
         <dependency>
             <groupId>de.btobastian.javacord</groupId>
@@ -91,11 +86,13 @@
             <version>2.0.10</version>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>de.btobastian.sdcf4j</groupId>
             <artifactId>sdcf4j</artifactId>
             <version>1.0.2</version>
         </dependency>
+        -->
         <dependency>
             <groupId>de.btobastian.sdcf4j</groupId>
             <artifactId>sdcf4j-core</artifactId>
@@ -135,6 +132,7 @@
 
 
     </dependencies>
+
 
     <properties>
         <kotlin.version>1.0.0</kotlin.version>

@@ -18,6 +18,7 @@ class daisy_command : CommandExecutor {
         var redditClient = _reddit_client as RedditClient
         if( !(redditClient.isAuthenticated) ) {
             _reddit.authenticate()
+            redditClient = _reddit_client as RedditClient
         }
 
         try {

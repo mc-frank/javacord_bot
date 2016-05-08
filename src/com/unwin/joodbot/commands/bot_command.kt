@@ -25,6 +25,7 @@ class bot_command : CommandExecutor {
                 .appendCode("", "Chuck or Norris - Posts a random Chuck Norris joke")
                 .appendCode("", "status <status> - Updates the status of the bot to the argument")
                 .append("Admin/Moderator only:\n")
+                .appendCode("", "mark <sfw/nsfw> - Marks a channel as SFW or NSFW.")
                 .appendCode("", "execute <code> - Executes specified Java code. Must have a return statement.")
                 .appendCode("", "stop - Stops the bot, I can only be slain by the dank MCFrank")
 

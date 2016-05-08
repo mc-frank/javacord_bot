@@ -16,7 +16,7 @@ import com.unwin.joodbot.json_reader
  */
 class subreddit_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("/r/"), description = "Returns random image from a subreddit")
+    @Command(aliases = arrayOf("/r/"), description = "Returns random image from a subreddit", async = true)
     fun onCommand(command: String, args: Array<String>, channel: Channel, message: Message): String {
         var subreddit_name = args[0]
         return get_post(subreddit_name, channel)
@@ -31,6 +31,7 @@ class subreddit_command : CommandExecutor {
 
             if( !(redditClient.isAuthenticated) ) {
                 _reddit.authenticate()
+                redditClient = _reddit_client as RedditClient
             }
 
             var post: Submission
