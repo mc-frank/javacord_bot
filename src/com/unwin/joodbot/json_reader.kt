@@ -21,7 +21,6 @@ class json_reader {
     var owner_id: String = ""
     var status: String = ""
     var prefix: String = ""
-    var is_bot_account: Boolean = false
 
     var functions = Array(maxsize, {i -> ""})
     var actions = Array(maxsize, {i -> ""})
@@ -59,8 +58,6 @@ class json_reader {
             token = a_obj.get("token") as String
             owner_id = a_obj.get("owner_id") as String
             prefix = a_obj.get("prefix") as String
-            var is_bot_account_temp = a_obj.get("is_bot_account") as String
-            is_bot_account = is_bot_account_temp.toBoolean()
             //
 
             // Functions and actions objects

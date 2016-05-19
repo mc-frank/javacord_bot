@@ -28,17 +28,8 @@ fun main(args: Array<String>) {
     var j_reader = json_reader()
     j_reader.read_json_config()
     var token = j_reader.token
-    var email = j_reader.email
-    var password = j_reader.password
 
-    var bot_account = j_reader.is_bot_account
-
-    if(bot_account) {
-        api.setToken(token, false)
-    } else {
-        api.setEmail(email)
-        api.setPassword(password)
-    }
+    api.setToken(token, false)
 
     api.connect(object: FutureCallback<DiscordAPI> {
         override fun onSuccess(api: DiscordAPI?) {
