@@ -19,7 +19,7 @@ class info_command : CommandExecutor {
         var details: String = "CPU(s) -- " + runtime.availableProcessors() +
                 "\nOS -- " + System.getProperty("os.name") +
                 "\nFree memory to JVM -- " + runtime.freeMemory() / (1024*1024) + " MB " +
-                "\nUptime -- " + (uptime/60) + " minutes (" + uptime/60/60 + " hours)" +
+                "\nUptime -- " + (uptime/60/1440) + " days (" + uptime/60/60 + " hours)" +
                 "\nReconnect enabled -- " + api.isAutoReconnectEnabled
         //message.reply(details)
         return details

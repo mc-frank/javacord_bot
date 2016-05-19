@@ -17,8 +17,6 @@ class json_reader {
     val file_name = "config.json"
     var config_file = File(file_name)
 
-    var email: String = ""
-    var password: String = ""
     var token: String = ""
     var owner_id: String = ""
     var status: String = ""
@@ -57,8 +55,6 @@ class json_reader {
             var c_obj = jsonObject.get("channels") as JSONObject
 
             // Credentials objects
-            email = a_obj.get("email") as String
-            password = a_obj.get("password") as String
             status = a_obj.get("status") as String
             token = a_obj.get("token") as String
             owner_id = a_obj.get("owner_id") as String

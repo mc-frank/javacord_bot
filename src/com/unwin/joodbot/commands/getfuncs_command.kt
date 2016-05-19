@@ -21,7 +21,7 @@ class getfuncs_command : CommandExecutor {
             if(j_reader.functions[a].length < 1) {
 
             } else {
-                temp += "```" + j_reader.functions[a] + "```"
+                temp += "``" + j_reader.functions[a] + "``, "
                 ++function_count
             }
         }

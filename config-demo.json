@@ -1,7 +1,5 @@
 {
   "api": {
-    "email": "EMAIL HERE",
-    "password": "PASSWORD HERE",
     "owner_id": "ID OF THE OWNERS ACCOUNT HERE",
     "token": "IF YOUR ACCOUNT IS OF BOT TYPE - THIS NEEDS TO BE FILLED OUT WITH YOUR API TOKEN",
     "status": "DEFAULT STATUS OF BOT",
