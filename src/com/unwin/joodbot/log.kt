@@ -17,35 +17,17 @@ class log() {
 
 
     /* Get the number of times filterText has been mentioned in the file */
-    fun filter_text(filter_text: String, server_id: String): Int{
-        var count: Int = -1
+    fun filter(filter_text: String, server_id: String): Int {
+        var count = 0
+        var file = File(_LOG_FILENAME + "-" + server_id + ".txt")
+        var text = file.readText().toLowerCase()
 
-        try{
-            var fstream: FileInputStream = FileInputStream(_LOG_FILENAME + "-" + server_id + ".txt")
-            var din: DataInputStream = DataInputStream(fstream)
-            var br: BufferedReader = BufferedReader(InputStreamReader(din))
-            var strLine: String = ""
-
-            // Check for the filter word in each line and if so, increment the counter
-            br.forEachLine {
-                strLine = it
-                var words = strLine.split(" ")
-                if(strLine.contains("JoodBot >")) {
-                    // Ignore counting the line if it's from JoodBot
-                } else {
-                    for(s: String in words) {
-                        if(s.toLowerCase().contains(filter_text)) {
-                            ++count
-                        }
-                    }
-                }
-            }
-
+        var index = text.indexOf(filter_text)
+        while(index != -1) {
+            count++
+            text = text.substring(index + 1)
+            index = text.indexOf(filter_text)
         }
-        catch(ex: Exception) {
-            println("Error in filterText: $ex")
-        }
-
 
         return count
     }
