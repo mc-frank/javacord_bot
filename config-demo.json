@@ -4,7 +4,6 @@
     "token": "IF YOUR ACCOUNT IS OF BOT TYPE - THIS NEEDS TO BE FILLED OUT WITH YOUR API TOKEN",
     "status": "DEFAULT STATUS OF BOT",
     "prefix": "DEFAULT PREFIX FOR COMMANDS",
-    "is_bot_account": "TRUE IF ACCOUNT IS OF BOT TYPE, FALSE OTHERWISE"
   },
   "channels" : {
 
@@ -13,6 +12,7 @@
     "FUNCTION-TRIGGER": "ACTION"
   },
   "reddit": {
+    "enabled" : "true OR false DEPENDING ON IF YOU WANT REDDIT FEATURES",
     "username": "REDDIT USERNAME HERE",
     "password": "REDDIT PASSWORD HERE",
     "client_id": "REDDIT CLIENT ID HERE",

@@ -45,7 +45,10 @@ fun main(args: Array<String>) {
 
 // Run when the api gets a connection to the server
 fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
+
     var api = n_api as DiscordAPI
+
+    var prefix = j_reader.prefix
 
     api.game = j_reader.status
     api.isIdle = true
@@ -53,7 +56,7 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
 
     //Register commands using sdcf4j.
     var command_handler = JavacordHandler(api)
-    command_handler.defaultPrefix = "$"
+    command_handler.defaultPrefix = prefix
 
     command_handler.registerCommand(bot_command())
     command_handler.registerCommand(chuck_command())
@@ -75,8 +78,6 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
     api.setAutoReconnect(true)
 
     // Do console based commands
-    var prefix = j_reader.prefix
-
     while (true) {
 
         println("Commands ready: ")
@@ -99,22 +100,6 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
             var word: String = input.substring(8, input.length)
             word.trim()
             api.game = word
-        }
-        else if (input.startsWith("${prefix}id")) {
-
-            var file = File("ids.txt")
-            if(file.exists()) {
-                file.delete()
-            }
-            var users = api.users
-            j_reader.write_users(users)
-            var file_text = ""
-            users?.forEach {
-                println("${it.name} - (${it.id})")
-                file.appendText("${it.name} - (${it.id})\r\n")
-                file_text += "${it.name} - ${it.id}\r\n"
-            }
-
         }
         else if (input.startsWith("${prefix}stop", true)) {
             System.exit(-1)

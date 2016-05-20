@@ -28,6 +28,7 @@ class json_reader {
     var usernames = Array(maxsize, {i -> ""})
     var ids = Array(maxsize, {i -> ""})
 
+    var r_enabled: Boolean? = null
     var r_username: String = ""
     var r_password: String = ""
     var r_client_id: String = ""
@@ -86,10 +87,14 @@ class json_reader {
             //
 
             // Create RedditCreds object and fill it with stuff from file
-            r_username = r_obj.get("username") as String
-            r_password = r_obj.get("password") as String
-            r_client_id = r_obj.get("client_id") as String
-            r_client_secret = r_obj.get("client_secret") as String
+            var r_enabled_temp = r_obj.get("enabled") as String
+            r_enabled = r_enabled_temp.toBoolean()
+            if(r_enabled == true) {
+                r_username = r_obj.get("username") as String
+                r_password = r_obj.get("password") as String
+                r_client_id = r_obj.get("client_id") as String
+                r_client_secret = r_obj.get("client_secret") as String
+            }
             //
 
             // Channels and their marks

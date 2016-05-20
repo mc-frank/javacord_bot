@@ -23,6 +23,12 @@ class subreddit_command : CommandExecutor {
     }
 
     fun get_post(subreddit_name: String, channel: Channel): String {
+        var j_reader = json_reader()
+        j_reader.read_json_config()
+        if(j_reader.r_enabled == false) {
+            return "Reddit functions aren't enabled :("
+        }
+
         println("subreddit name = $subreddit_name")
         var link = "link-null"
 
