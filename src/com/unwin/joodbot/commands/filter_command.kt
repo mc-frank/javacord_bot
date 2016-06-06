@@ -13,7 +13,9 @@ class filter_command : CommandExecutor {
     @Command(aliases = arrayOf("filter"), description = "Filters text in the com.unwin.joodbot.log file")
     fun onCommand(command: String, args: Array<String>, message: Message): String {
         var word = ""
-        args.forEach { word += " $it" }
+        args.forEach { word += " ${it.toLowerCase()}" }
+        word = word.toLowerCase()
+        println("word == $word")
 
         var server_id = message.channelReceiver.server.id
         var count = log().filter(word, server_id)
