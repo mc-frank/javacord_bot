@@ -6,9 +6,9 @@ import de.btobastian.sdcf4j.Command
 import de.btobastian.javacord.entities.Channel
 import de.btobastian.javacord.entities.message.Message
 import net.dean.jraw.RedditClient
-import com.unwin.joodbot._reddit_client
-import com.unwin.joodbot._reddit
 import com.unwin.joodbot.json_reader
+import net.dean.jraw.http.UserAgent
+import net.dean.jraw.http.oauth.Credentials
 
 
 /**
@@ -23,22 +23,23 @@ class subreddit_command : CommandExecutor {
     }
 
     fun get_post(subreddit_name: String, channel: Channel): String {
+
         var j_reader = json_reader()
         j_reader.read_json_config()
         if(j_reader.r_enabled == false) {
             return "Reddit functions aren't enabled :("
         }
 
+        val userAgent = UserAgent.of("discord-bot", "com.unwin.discordbot", "v3.0", "joodbot")
+        val redditClient = RedditClient(userAgent)
+        val credentials = Credentials.script(j_reader.r_username, j_reader.r_password, j_reader.r_client_id, j_reader.r_client_secret)
+        val auth_data = redditClient.oAuthHelper.easyAuth(credentials)
+        redditClient.authenticate(auth_data)
+
         println("subreddit name = $subreddit_name")
         var link = "link-null"
 
         try {
-            var redditClient = _reddit_client as RedditClient
-
-            if( !(redditClient.isAuthenticated) ) {
-                _reddit.authenticate()
-                redditClient = _reddit_client as RedditClient
-            }
 
             var post: Submission
             var subreddit = redditClient.getSubreddit(subreddit_name)
@@ -50,6 +51,8 @@ class subreddit_command : CommandExecutor {
                 if(channel_mark.equals("sfw")) {
                     return "This subreddit is NSFW and not allowed in this SFW marked channel."
                 }
+            } else if(subreddit.isQuarantined) {
+                return "This subreddit is Quarantined and so cannot be accessed by this bot."
             }
 
             post = redditClient.getRandomSubmission(subreddit_name)

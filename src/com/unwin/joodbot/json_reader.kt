@@ -21,6 +21,8 @@ class json_reader {
     var owner_id: String = ""
     var status: String = ""
     var prefix: String = ""
+    var execute_iterator = Array(maxsize, {i -> ""})
+    var execute_allowed = Array(maxsize, {i -> ""})
 
     var functions = Array(maxsize, {i -> ""})
     var actions = Array(maxsize, {i -> ""})
@@ -84,6 +86,25 @@ class json_reader {
                 usernames[a] = t_temp[0]
                 ids[a] = t_temp[1]
             }
+            //
+
+            // execute_allowed members
+            count = 0
+            var exec_array = a_obj.get("execute_allowed") as JSONObject
+            var exec_keys = exec_array.keys
+            var exec_values = exec_array.values
+
+            exec_keys.forEach {
+                execute_iterator[count++] = it as String
+            }
+
+            count = 0
+
+            exec_values.forEach {
+                execute_allowed[count++] = it as String
+            }
+
+            count = 0
             //
 
             // Create RedditCreds object and fill it with stuff from file
@@ -176,6 +197,25 @@ class json_reader {
 
         return "null"
 
+    }
+
+    fun get_member_can_exec(user_id: String): Boolean {
+
+        var can_exec = false
+
+        try {
+
+            for(a in 0..execute_allowed.size) {
+                if(execute_allowed.elementAt(a).equals(user_id)) {
+                    can_exec = true
+                }
+            }
+
+        } catch (ex: Exception) {
+            println("Error in get_member_can_exec -- ${ex.message}")
+        }
+
+        return can_exec
     }
 
     fun write_users(m_users: Collection<User>?) {

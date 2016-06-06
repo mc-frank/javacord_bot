@@ -4,6 +4,9 @@
     "token": "IF YOUR ACCOUNT IS OF BOT TYPE - THIS NEEDS TO BE FILLED OUT WITH YOUR API TOKEN",
     "status": "DEFAULT STATUS OF BOT",
     "prefix": "DEFAULT PREFIX FOR COMMANDS",
+    "execute_allowed": {
+      "ID_0": "ID OF MEMBERS ALLOWED TO USE THE EXECUTE COMMAND"
+    }
   },
   "channels" : {
 

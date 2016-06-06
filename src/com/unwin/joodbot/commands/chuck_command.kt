@@ -31,7 +31,8 @@ class chuck_command : CommandExecutor {
             var jsonObject = JSONParser().parse(result.toString()) as JSONObject
             var valueObj = jsonObject.get("value") as JSONObject
             var value = valueObj.get("joke")
-            joke = value as String
+            value = value.toString().replace("&quot;", "\"")
+            joke = value
 
         } catch(ex: Exception) {
             println("Error in fetchJoke - ${ex.message}")
