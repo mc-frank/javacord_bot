@@ -1,8 +1,10 @@
 package com.unwin.joodbot
 
+import java.io.File
 import kotlin.text.split
 import kotlin.text.startsWith
 import de.btobastian.javacord.*
+import kotlin.collections.forEach
 import kotlin.text.*
 import com.google.common.util.concurrent.FutureCallback
 import de.btobastian.sdcf4j.handler.JavacordHandler
@@ -14,7 +16,12 @@ import com.unwin.joodbot.commands.*
  * Created by unwin on 10/01/2016.
  */
 
+var _reddit_client: RedditClient? = null
+var _reddit = reddit_client()
+
 fun main(args: Array<String>) {
+    _reddit_client = _reddit.client
+    _reddit.authenticate()
 
     val api = Javacord.getApi()
 
@@ -109,7 +116,6 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
             api.reconnectBlocking()
             api.setAutoReconnect(true)
         }
-
 
     }
 }

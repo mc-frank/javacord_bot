@@ -41,7 +41,7 @@ class main_listener: MessageCreateListener, MessageEditListener, TypingStartList
         log.fileName = log._LOG_FILENAME + "-" + message.channelReceiver.server.id
         var logText = "<${message.channelReceiver.server.name}>/[${message.channelReceiver.name}] ${message.author.name} > ${message.content}"
 
-        if(message.channelReceiver == null) {
+        if(message.isPrivateMessage) {
             println(logText)
             return
         }
