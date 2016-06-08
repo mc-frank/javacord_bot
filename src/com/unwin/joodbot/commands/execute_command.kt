@@ -29,6 +29,11 @@ class execute_command : CommandExecutor {
         println(user_id)
 
         if( j_reader.get_member_can_exec(user_id) == true ) {
+            if(message.content.contains("api.getToken()")) {
+                println("Token detected")
+                return "Pls don't try to get the token :D"
+            }
+
             var code = ""
             args.forEach { code += " $it" }
             code = code.replace("return (.+);".toRegex(), "return String.valueOf($1);")

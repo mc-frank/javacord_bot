@@ -25,15 +25,15 @@ fun main(args: Array<String>) {
     api.setToken(token, false)
 
     api.connect(object: FutureCallback<DiscordAPI> {
-        override fun onSuccess(api: DiscordAPI?) {
-            println("Connect to Discord as ${api?.yourself?.name}/(@${api?.yourself?.id})")
-            setupAPI(api, j_reader)
-        }
+            override fun onSuccess(api: DiscordAPI?) {
+                println("Connect to Discord as ${api?.yourself?.name}/(@${api?.yourself?.id})")
+                setupAPI(api, j_reader)
+            }
 
-        override fun onFailure(t: Throwable) {
-            println("Unable to connect to Discord Servers :( -- ${t.message}")
-        }
-    })
+            override fun onFailure(t: Throwable) {
+                println("Unable to connect to Discord Servers :( -- ${t.message}")
+            }
+        })
 }
 
 // Run when the api gets a connection to the server
