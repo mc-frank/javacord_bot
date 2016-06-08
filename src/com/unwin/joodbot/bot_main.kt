@@ -1,19 +1,16 @@
 package com.unwin.joodbot
 
-import kotlin.text.split
 import kotlin.text.startsWith
 import de.btobastian.javacord.*
 import kotlin.text.*
 import com.google.common.util.concurrent.FutureCallback
 import de.btobastian.sdcf4j.handler.JavacordHandler
-import net.dean.jraw.RedditClient
 
 import com.unwin.joodbot.commands.*
 
 /**
  * Created by unwin on 10/01/2016.
  */
-
 fun main(args: Array<String>) {
 
     val api = Javacord.getApi()
@@ -76,20 +73,7 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
         println("Commands ready: ")
         var input = readLine()
 
-        if (input!!.startsWith("${prefix}msg", true)) {
-            var channels = api.getServerById("90542226181988352")?.channels
-            var generalElement = 0
-            for(a in 0..(channels?.size)!!.minus(1)) {
-                if(channels?.elementAt(a)?.name.equals("developer")) {
-                    generalElement = a
-                }
-            }
-            var generalChannel = channels?.elementAt(generalElement)
-            println("channel = ${generalChannel?.name}")
-            var msg = input.split("${prefix}msg ")
-            generalChannel?.sendMessage("${msg[1]}")
-        }
-        else if (input.startsWith("${prefix}status")){
+        if (input!!.startsWith("${prefix}status")) {
             var word: String = input.substring(8, input.length)
             word.trim()
             api.game = word
@@ -97,19 +81,12 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
         else if (input.startsWith("${prefix}stop", true)) {
             System.exit(-1)
         }
-        else if (input.startsWith("${prefix}join-server")) {
-            var invite = input.substring(13, input.length)
-            if(invite.length == 0) {
-                println("No invite specified.")
-            }
-            api.acceptInvite(invite)
-        }
         else if (input.startsWith("${prefix}reconnect")) {
             api.setAutoReconnect(false)
             api.reconnectBlocking()
             api.setAutoReconnect(true)
         }
 
-
     }
+
 }

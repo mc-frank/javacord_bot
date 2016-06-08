@@ -30,7 +30,6 @@ class execute_command : CommandExecutor {
 
         if( j_reader.get_member_can_exec(user_id) == true ) {
             if(message.content.contains("api.getToken()")) {
-                println("Token detected")
                 return "Pls don't try to get the token :D"
             }
 
