@@ -38,7 +38,6 @@ class execute_command : CommandExecutor {
             code = code.replace("return (.+);".toRegex(), "return String.valueOf($1);")
             val pool = ClassPool.getDefault()
             pool.insertClassPath(ClassClassPath(api.javaClass))
-            pool.importPackage("java.io.File")
             pool.importPackage("")
             pool.importPackage("de.btobastian.javacord.entities")
             pool.importPackage("de.btobastian.javacord.entities.message")
