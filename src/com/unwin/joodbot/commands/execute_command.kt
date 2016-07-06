@@ -39,6 +39,7 @@ class execute_command : CommandExecutor {
             val pool = ClassPool.getDefault()
             pool.insertClassPath(ClassClassPath(api.javaClass))
             pool.importPackage("")
+            pool.importPackage("java.io.File")
             pool.importPackage("de.btobastian.javacord.entities")
             pool.importPackage("de.btobastian.javacord.entities.message")
             pool.importPackage("de.btobastian.javacord.entities.invite")
