@@ -52,7 +52,6 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
     command_handler.registerCommand(chuck_command())
     command_handler.registerCommand(reconnect_command())
     command_handler.registerCommand(daisy_command())
-    //command_handler.registerCommand(avatar_command())
     command_handler.registerCommand(info_command())
     command_handler.registerCommand(filter_command())
     command_handler.registerCommand(getfuncs_command())
@@ -64,8 +63,9 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
     command_handler.registerCommand(dump_command())
     command_handler.registerCommand(mark_command())
     command_handler.registerCommand(tag_command())
-    //command_handler.registerCommand(subreddit_command())
     command_handler.registerCommand(userinfo_command())
+    //command_handler.registerCommand(subreddit_command())
+    //command_handler.registerCommand(avatar_command())
     //
 
     api.setAutoReconnect(true)
