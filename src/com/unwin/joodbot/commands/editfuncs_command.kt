@@ -9,7 +9,7 @@ import com.unwin.joodbot.json_reader
  */
 class editfuncs_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("edit-funcs"), description = "Overwrites a function in the file")
+    @Command(aliases = arrayOf("edit-funcs", "edit-tags"), description = "Overwrites a function in the file")
     fun onCommand(command: String, args: Array<String>) {
         var func = args[0]
         var action = ""

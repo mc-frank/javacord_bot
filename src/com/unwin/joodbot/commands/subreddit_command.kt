@@ -19,16 +19,18 @@ class subreddit_command : CommandExecutor {
     @Command(aliases = arrayOf("/r/"), description = "Returns random image from a subreddit", async = true)
     fun onCommand(command: String, args: Array<String>, channel: Channel, message: Message): String {
         var subreddit_name = args[0]
-        return get_post(subreddit_name, channel)
+        return get_post(subreddit_name, channel, message)
     }
 
-    fun get_post(subreddit_name: String, channel: Channel): String {
+    fun get_post(subreddit_name: String, channel: Channel, message: Message): String {
 
         var j_reader = json_reader()
         j_reader.read_json_config()
         if(j_reader.r_enabled == false) {
             return "Reddit functions aren't enabled :("
         }
+
+        message.receiver.type()
 
         val userAgent = UserAgent.of("discord-bot", "com.unwin.discordbot", "v3.0", "joodbot")
         val redditClient = RedditClient(userAgent)
@@ -45,7 +47,6 @@ class subreddit_command : CommandExecutor {
             var subreddit = redditClient.getSubreddit(subreddit_name)
 
             if(subreddit.isNsfw){
-                var j_reader = json_reader()
                 j_reader.read_json_config()
                 var channel_mark = j_reader.get_channel_mark(channel)
                 if(channel_mark.equals("sfw")) {

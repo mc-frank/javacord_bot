@@ -32,6 +32,12 @@ class main_listener: MessageCreateListener, MessageEditListener, TypingStartList
 
     override fun onMessageCreate(api: DiscordAPI, message: Message) {
 
+        // PM messages
+        if(message.isPrivateMessage) {
+            message.reply("```I don't have any private functions, please use my commands in a chat```")
+            return
+        }
+
         //Read config information from the .json file
         var jReader = json_reader()
         jReader.read_json_config()
@@ -41,10 +47,6 @@ class main_listener: MessageCreateListener, MessageEditListener, TypingStartList
         log.fileName = log._LOG_FILENAME + "-" + message.channelReceiver.server.id
         var logText = "<${message.channelReceiver.server.name}>/[${message.channelReceiver.name}] ${message.author.name} > ${message.content}"
 
-        if(message.channelReceiver == null) {
-            println(logText)
-            return
-        }
 
         //Only print to file and to console if message isn't a PM
         log.text = logText
@@ -70,20 +72,12 @@ class main_listener: MessageCreateListener, MessageEditListener, TypingStartList
             if(message.content.startsWith("${jReader.prefix}/r/")) {
                 var subreddit_name = message.content.substring(4, message.content.length)
                 var r_getter = subreddit_command()
-                var r_post = r_getter.get_post(subreddit_name, message.channelReceiver)
+                var r_post = r_getter.get_post(subreddit_name, message.channelReceiver, message)
                 message.reply(r_post)
             }
 
-            var a = 0
-            jReader.functions.forEach {
-                if (message.content.equals("${jReader.prefix}$it")) {
-                    message.reply(jReader.actions[a])
-                }
-                ++a
-            }
-
-
         }
+
     }
 
     override fun onMessageEdit(api: DiscordAPI, message: Message, oldMessage: String) {

@@ -22,7 +22,7 @@ class daisy_command : CommandExecutor {
             return "Reddit functions aren't enabled :("
         }
 
-        message.getReceiver().type()
+        message.receiver.type()
 
         val userAgent = UserAgent.of("discord-bot", "com.unwin.discordbot", "v3.0", "joodbot")
         val redditClient = RedditClient(userAgent)

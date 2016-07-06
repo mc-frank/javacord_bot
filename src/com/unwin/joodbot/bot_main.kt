@@ -63,6 +63,8 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
     command_handler.registerCommand(stop_command())
     command_handler.registerCommand(dump_command())
     command_handler.registerCommand(mark_command())
+    command_handler.registerCommand(tag_command())
+    //command_handler.registerCommand(subreddit_command())
     //
 
     api.setAutoReconnect(true)

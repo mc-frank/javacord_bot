@@ -206,7 +206,7 @@ class json_reader {
         try {
 
             for(a in 0..execute_allowed.size) {
-                if(execute_allowed.elementAt(a).equals(user_id)) {
+                if(execute_allowed.elementAt(a).equals(user_id) || owner_id.equals(user_id)) {
                     can_exec = true
                 }
             }
@@ -216,6 +216,16 @@ class json_reader {
         }
 
         return can_exec
+    }
+
+    fun add_member_can_exec(user_id: String) {
+
+        try {
+            // TODO: finish this
+        } catch (ex: Exception) {
+            println("Error in add_member_can_exec -- ${ex.message}")
+        }
+
     }
 
     fun write_users(m_users: Collection<User>?) {

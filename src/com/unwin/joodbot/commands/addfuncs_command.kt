@@ -10,7 +10,7 @@ import com.unwin.joodbot.json_reader
  */
 class addfuncs_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("add-funcs"), description = "Adds a function to the file")
+    @Command(aliases = arrayOf("add-funcs", "add-tags"), description = "Adds a function to the file")
     fun onCommand(command: String, args: Array<String>, message: Message) {
         var new_func = args[0]
         var new_action = ""

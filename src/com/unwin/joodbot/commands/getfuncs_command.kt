@@ -10,7 +10,7 @@ import com.unwin.joodbot.json_reader
  */
 class getfuncs_command : CommandExecutor {
 
-    @Command(aliases = arrayOf("get-funcs"), description = "Returns the functions in the file")
+    @Command(aliases = arrayOf("get-funcs", "get-tags"), description = "Returns the functions in the file")
     fun onCommand(command: String, args: Array<String>, message: Message) {
         var function_count = 0
         var temp = ""
