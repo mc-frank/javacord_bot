@@ -1,11 +1,13 @@
 package com.unwin.joodbot
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import de.btobastian.javacord.entities.Channel
 import de.btobastian.javacord.entities.User
 import java.io.File
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
+import kotlin.concurrent.thread
 
 /**
  * Created by unwin on 01-Mar-16.
@@ -218,12 +220,31 @@ class json_reader {
         return can_exec
     }
 
-    fun add_member_can_exec(user_id: String) {
+    fun delete_function(function: String) {
+        read_json_config()
 
         try {
-            // TODO: finish this
+            var text = config_file.readText()
+            var jsonObject = JSONParser().parse(text.toString()) as JSONObject
+            var f_obj = jsonObject.get("functions") as JSONObject
+
+            var f_keys = f_obj.keys
+
+            f_keys.forEach {
+                if(it.toString().equals(function)) {
+                    println("Found match!!!")
+                    println(it)
+                    f_obj.remove(it)
+                }
+            }
+
+            var gson = GsonBuilder().setPrettyPrinting().create()
+            var pretty_json = gson.toJson(jsonObject)
+
+            config_file.writeText(pretty_json)
+
         } catch (ex: Exception) {
-            println("Error in add_member_can_exec -- ${ex.message}")
+            println("Error in delete_function -- ${ex.message}")
         }
 
     }
