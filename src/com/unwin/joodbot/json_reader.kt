@@ -2,6 +2,7 @@ package com.unwin.joodbot
 
 import com.google.gson.GsonBuilder
 import de.btobastian.javacord.entities.Channel
+import de.btobastian.javacord.entities.Server
 import de.btobastian.javacord.entities.User
 import java.io.File
 import org.json.simple.JSONObject
@@ -36,6 +37,7 @@ class json_reader {
     var r_client_id: String = ""
     var r_client_secret: String = ""
 
+    var server_ids = Array(maxsize, {i -> ""})
     var channel_ids = Array(maxsize, {i -> ""})
     var channel_marks = Array(maxsize, {i -> ""})
 
@@ -51,10 +53,8 @@ class json_reader {
             var jsonObject = JSONParser().parse(text.toString()) as JSONObject
 
             var a_obj = jsonObject.get("api") as JSONObject
-            var f_obj = jsonObject.get("functions") as JSONObject
             var u_obj = jsonObject.get("users") as JSONObject
             var r_obj = jsonObject.get("reddit") as JSONObject
-            var c_obj = jsonObject.get("channels") as JSONObject
 
             // Credentials objects
             status = a_obj.get("status") as String
@@ -63,21 +63,7 @@ class json_reader {
             prefix = a_obj.get("prefix") as String
             //
 
-            // Functions and actions objects
-            var f_keys = f_obj.keys
-            var f_values = f_obj.values
             var count = 0
-
-            f_keys.forEach {
-                functions[count++] = it as String
-            }
-            count = 0
-
-            f_values.forEach {
-                actions[count++] = it as String
-            }
-            count = 0
-            //
 
             // Users and ids objects
             var u_temp = u_obj.entries
@@ -118,25 +104,14 @@ class json_reader {
             }
             //
 
-            // Channels and their marks
-            var c_keys = c_obj.keys
-            var c_values = c_obj.values
 
-            c_keys.forEach {
-                channel_ids[count++] = it as String
-            }
-            count = 0
-
-            c_values.forEach {
-                channel_marks[count++] = it as String
-            }
-            count = 0
 
         } catch (ex: Exception) {
             println("Error in read_json_from_config -- ${ex.message}")
         }
 
     }
+
 
     fun get_user_id(username: String): String {
         var r_id = "r_id null"
@@ -218,16 +193,6 @@ class json_reader {
         return can_exec
     }
 
-    fun add_member_can_exec(user_id: String) {
-
-        try {
-            // TODO: finish this
-        } catch (ex: Exception) {
-            println("Error in add_member_can_exec -- ${ex.message}")
-        }
-
-    }
-
     fun write_users(m_users: Collection<User>?) {
 
         try {
@@ -295,12 +260,28 @@ class json_reader {
 
         var text = config_file.readText()
         var jsonObject = JSONParser().parse(text) as JSONObject
+        var f_obj = jsonObject.get("functions") as JSONObject
 
+        var functionsInConfig = f_obj.toString()
+
+        f_obj.keys.forEach {
+            if(it!!.equals(func)) {
+                jsonObject.remove(func)
+            }
+        }
+
+        /*
         functions.forEach {
             if(it.length != 0 && func.equals(it)) {
                 jsonObject.remove(func)
             }
         }
+        */
+
+        var gson = GsonBuilder().setPrettyPrinting().create()
+        var pretty_json = gson.toJson(jsonObject)
+
+        config_file.writeText(pretty_json)
 
     }
 }

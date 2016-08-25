@@ -8,12 +8,6 @@
       "ID_0": "ID OF MEMBERS ALLOWED TO USE THE EXECUTE COMMAND"
     }
   },
-  "channels" : {
-
-  },
-  "functions": {
-    "FUNCTION-TRIGGER": "ACTION"
-  },
   "reddit": {
     "enabled" : "true OR false DEPENDING ON IF YOU WANT REDDIT FEATURES",
     "username": "REDDIT USERNAME HERE",

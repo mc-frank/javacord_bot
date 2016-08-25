@@ -56,6 +56,7 @@ fun setupAPI(n_api: DiscordAPI?, j_reader: json_reader) {
     command_handler.registerCommand(filter_command())
     command_handler.registerCommand(getfuncs_command())
     command_handler.registerCommand(addfuncs_command())
+    command_handler.registerCommand(deletefuncs_command())
     command_handler.registerCommand(editfuncs_command())
     command_handler.registerCommand(execute_command())
     command_handler.registerCommand(status_command())

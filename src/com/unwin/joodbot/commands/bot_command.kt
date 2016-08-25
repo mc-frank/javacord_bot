@@ -15,8 +15,8 @@ class bot_command : CommandExecutor {
         var channel = message.channelReceiver
         channel.sendMessage(MessageBuilder()
                 .append("My functions are (everyone):\n")
-                .append("``tag <tag-name> - posts a tag that has been user-added.``")
-                .append("``filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord bot-log.txt\n")
+                .append("``tag <tag-name> - posts a tag that has been user-added.")
+                .append("filter <user/word> - filters and shows the number of times a word has been mentioned in the Discord bot-log.txt\n")
                 .append("get-tags - Retrieves list of dynamic functions in the file currently\n")
                 .append("add-tags new-function1  new-action1 - Adds a function to the file\n")
                 .append("edit-tags function1  new-action1 - Edits a function in the file\n")

@@ -69,7 +69,8 @@ class main_listener: MessageCreateListener, MessageEditListener, TypingStartList
         // Reply with to a function in the file with the corresponding action
         thread() {
 
-            if(message.content.startsWith("${jReader.prefix}/r/")) {
+            if(message.content.startsWith("${jReader.prefix}/r/") || message.content.startsWith(("${jReader.prefix}/R/"))) {
+                message.receiver.type()
                 var subreddit_name = message.content.substring(4, message.content.length)
                 var r_getter = subreddit_command()
                 var r_post = r_getter.get_post(subreddit_name, message.channelReceiver, message)
