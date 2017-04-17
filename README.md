@@ -15,4 +15,3 @@ This is a simple bot written in Kotlin, and upon the Javacord API wrapper for Di
 - [Google JSON Simple](https://code.google.com/archive/p/json-simple/)
 - [JRAW](https://github.com/thatJavaNerd/JRAW)
 
-## [Add JoodBot to your server](https://discordapp.com/oauth2/authorize?&client_id=159689135551021056&scope=bot&permissions=66321471)
