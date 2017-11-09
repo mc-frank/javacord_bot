@@ -1,4 +1,10 @@
 {
+  "functions" : {
+
+  },
+  "channels": {
+
+  },
   "api": {
     "owner_id": "ID OF THE OWNERS ACCOUNT HERE",
     "token": "IF YOUR ACCOUNT IS OF BOT TYPE - THIS NEEDS TO BE FILLED OUT WITH YOUR API TOKEN",

@@ -50,13 +50,13 @@ class json_reader {
     fun read_json_config(){
 
         try {
-            var text = config_file.readText()
+            val text = config_file.readText()
 
-            var jsonObject = JSONParser().parse(text.toString()) as JSONObject
+            val jsonObject = JSONParser().parse(text.toString()) as JSONObject
 
-            var a_obj = jsonObject.get("api") as JSONObject
-            var u_obj = jsonObject.get("users") as JSONObject
-            var r_obj = jsonObject.get("reddit") as JSONObject
+            val a_obj = jsonObject.get("api") as JSONObject
+            val u_obj = jsonObject.get("users") as JSONObject
+            val r_obj = jsonObject.get("reddit") as JSONObject
 
             // Credentials objects
             status = a_obj.get("status") as String
@@ -68,9 +68,9 @@ class json_reader {
             var count = 0
 
             // Users and ids objects
-            var u_temp = u_obj.entries
+            val u_temp = u_obj.entries
             for(a in 0..u_temp.indices.last) {
-                var t_temp = u_temp.elementAt(a).toString().split("=")
+                val t_temp = u_temp.elementAt(a).toString().split("=")
                 usernames[a] = t_temp[0]
                 ids[a] = t_temp[1]
             }
@@ -78,9 +78,9 @@ class json_reader {
 
             // execute_allowed members
             count = 0
-            var exec_array = a_obj.get("execute_allowed") as JSONObject
-            var exec_keys = exec_array.keys
-            var exec_values = exec_array.values
+            val exec_array = a_obj.get("execute_allowed") as JSONObject
+            val exec_keys = exec_array.keys
+            val exec_values = exec_array.values
 
             exec_keys.forEach {
                 execute_iterator[count++] = it as String
@@ -258,24 +258,20 @@ class json_reader {
     fun write_functions(new_func: String, new_action: String) {
 
         try {
+            val text = config_file.readText()
+            val jsonObject = JSONParser().parse(text) as JSONObject
+            val f_obj = jsonObject.get("functions") as JSONObject
 
-            var function = new_func
-            var action = new_action
-
-            var text = config_file.readText()
-            var jsonObject = JSONParser().parse(text) as JSONObject
-            var f_obj = jsonObject.get("functions") as JSONObject
-
-            var functionsInConfig = f_obj.toString()
+            val functionsInConfig = f_obj.toString()
 
             for(a in 0..functionsInConfig.count()) {
                 // function conflict
             }
 
-            f_obj.put(function, action)
+            f_obj.put(new_func, new_action)
             jsonObject.replace("functions", f_obj)
-            var gson = GsonBuilder().setPrettyPrinting().create()
-            var pretty_json = gson.toJson(jsonObject)
+            val gson = GsonBuilder().setPrettyPrinting().create()
+            val pretty_json = gson.toJson(jsonObject)
 
             config_file.writeText(pretty_json)
 
@@ -286,4 +282,25 @@ class json_reader {
         read_json_config()
 
     }
+
+    fun remove_functions(function: String) {
+
+        try {
+            val text = config_file.readText()
+            val jsonObject = JSONParser().parse(text) as JSONObject
+            val f_obj = jsonObject.get("functions") as JSONObject
+
+            f_obj.remove(function)
+            jsonObject.replace("functions", f_obj)
+            val gson = GsonBuilder().setPrettyPrinting().create()
+            val pretty_json = gson.toJson(jsonObject)
+
+            config_file.writeText(pretty_json)
+
+        } catch (ex: Exception) {
+
+        }
+
+    }
+
 }

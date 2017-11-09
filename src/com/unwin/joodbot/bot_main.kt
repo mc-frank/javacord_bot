@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
     j_reader.read_json_config()
     var token = j_reader.token
 
-    api.setToken(token, false)
+    api.setToken(token, true)
 
     api.connect(object: FutureCallback<DiscordAPI> {
             override fun onSuccess(api: DiscordAPI?) {

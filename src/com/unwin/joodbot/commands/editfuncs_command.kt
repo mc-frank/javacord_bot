@@ -21,7 +21,7 @@ class editfuncs_command : CommandExecutor {
         j_reader.read_json_config()
 
         j_reader.functions.forEach {
-            if(it.length != 0 && func.equals(it)) {
+            if(it.isNotEmpty() && func == it) {
                 j_reader.remove_functions(func)
             }
         }
